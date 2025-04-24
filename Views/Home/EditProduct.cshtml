@@ -1,0 +1,16 @@
+@model MVC.Models.Product
+
+<h2>Sửa Thông Tin Sản Phẩm Có id: @Model.ProductId</h2>
+
+<form asp-action="EditProduct" method="post">
+    <input type="hidden" asp-for="ProductId" />
+    <label>Product Name</label>
+    <input asp-for="ProductName" class="form-control" />
+    <label>Category</label>
+    <input asp-for="ProductCategory" class="form-control" />
+    <label>Price</label>
+    <input asp-for="ProductPrice" class="form-control" />
+    <label>Stock</label>
+    <input asp-for="ProductStock" class="form-control" />
+    <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
+</form>

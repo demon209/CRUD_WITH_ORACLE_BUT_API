@@ -1,0 +1,24 @@
+@model MVC.Models.Pet
+
+<h2>Sửa Thú Cưng Có id: @Model.PetId</h2>
+
+<form asp-action="EditPet" method="post">
+    <input type="hidden" asp-for="PetId" />
+
+    <label>Pet Name</label>
+    <input asp-for="PetName" class="form-control" />
+    <label>Pet Type</label>
+    <input asp-for="PetType" class="form-control" />
+    <label>Breed</label>
+    <input asp-for="Breed" class="form-control" />
+    <label>Age</label>
+    <input asp-for="Age" class="form-control" />
+    <label>Gender</label>
+    <input asp-for="Gender" class="form-control" />
+    <label>Price</label>
+    <input asp-for="Price" class="form-control" />
+    <label>Stock</label>
+    <input asp-for="Stock" class="form-control" />
+
+    <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
+</form>

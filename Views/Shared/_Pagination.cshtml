@@ -1,0 +1,114 @@
+@model PaginationViewModel
+
+@{
+    int CurrentPage = Model.CurrentPage;
+    int CountPages = Model.CountPages;
+    var GenerateUrl = Model.GenerateUrl;
+
+    if (CurrentPage > CountPages) 
+        CurrentPage = CountPages;
+
+    if (CountPages <= 1) return;
+
+    int? preview = null;
+    int? next = null;
+
+    if (CurrentPage > 1)
+        preview = CurrentPage - 1;
+
+    if (CurrentPage < CountPages)
+        next = CurrentPage + 1;
+
+    List<int> pagesRanges = new List<int>();    
+
+    int delta = 5;     
+    int remain = delta * 2;
+
+    pagesRanges.Add(CurrentPage);
+
+    for (int i = 1; i <= delta; i++)
+    {
+        if (CurrentPage + i <= CountPages) {
+            pagesRanges.Add(CurrentPage + i); 
+            remain--;
+        }
+
+        if (CurrentPage - i >= 1) {
+            pagesRanges.Insert(0, CurrentPage - i);
+            remain--;
+        }
+    }
+
+    if (remain > 0) {
+        if (pagesRanges[0] == 1) {
+            for (int i = 1; i <= remain; i++)
+            {
+                if (pagesRanges.Last() + 1 <= CountPages) {
+                    pagesRanges.Add(pagesRanges.Last() + 1);
+                }
+            }
+        } else {
+            for (int i = 1; i <= remain; i++)
+            {
+                if (pagesRanges.First() - 1 > 1) {
+                    pagesRanges.Insert(0, pagesRanges.First() - 1);
+                }
+            }
+        }
+    }
+}
+
+
+@* PHÁT SINH HTML*@
+
+
+<nav class="d-flex justify-content-center mt-3">
+    <ul class="pagination">
+        <!-- Previous page link -->
+        @if (preview != null)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@GenerateUrl(preview)" data-page="@preview">🏃‍♀️</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">🏃‍♂️</a>
+            </li>
+        }
+
+        <!-- Numbered page links -->
+        @foreach (var pageitem in pagesRanges)
+        {
+            if (pageitem != CurrentPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@GenerateUrl(pageitem)" data-page="@pageitem">
+                        @pageitem
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item aCtive" aria-Current="page">
+                    <a class="page-link" href="#">@pageitem <span class="sr-only" data-page="@pageitem">👈</span></a>
+                </li>
+            }
+        }
+
+        <!-- Next page link -->
+        @if (next != null)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@GenerateUrl(next)" data-page="@next">🏃‍♀️‍➡️</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">🏃‍♀️‍➡️</a>
+            </li>
+        }
+    </ul>
+</nav>

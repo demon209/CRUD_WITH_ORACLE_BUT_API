@@ -1,0 +1,55 @@
+@model PetListViewModel
+
+<h2>Danh sách thú cưng</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>PetId</th>
+            <th>Tên</th>
+            <th>Loại</th>
+            <th>Giống</th>
+            <th>Tuổi</th>
+            <th>Giới tính</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Pets == null || Model.Pets.Count == 0)
+        {
+            <tr>
+                <td colspan="9" class="text-center">Không có thú cưng nào.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var pet in Model.Pets)
+            {
+                <tr>
+                    <td>@pet.PetId</td>
+                    <td>@pet.PetName</td>
+                    <td>@pet.PetType</td>
+                    <td>@pet.Breed</td>
+                    <td>@pet.Age</td>
+                    <td>@pet.Gender</td>
+                    <td>@pet.Price</td>
+                    <td>@pet.Stock</td>
+                    <td>
+                        <form asp-action="DeletePet" asp-controller="Home" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
+                            <input type="hidden" name="id" value="@pet.PetId" />
+                            <button type="submit" class="btn btn-danger btn-sm">😾 Xóa</button>
+                        </form>
+                        <a asp-action="EditPet" asp-route-id="@pet.PetId" class="btn btn-warning btn-sm">😼 Sửa</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<a href="/Home/CreatePets" class="btn btn-success mb-3">🐸 Thêm thú cưng</a>
+
+<!-- Phân trang -->
+@Html.Partial("_Pagination", Model)

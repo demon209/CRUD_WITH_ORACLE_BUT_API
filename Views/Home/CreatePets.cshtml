@@ -1,0 +1,41 @@
+@model MVC.Models.Pet
+
+<h2>Thêm thú cưng mới</h2>
+
+<form asp-action="CreatePets" method="post" class="form">
+    <div class="form-group">
+        <label>PetId</label>
+        <input asp-for="PetId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Tên</label>
+        <input asp-for="PetName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Loại</label>
+        <input asp-for="PetType" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Giống</label>
+        <input asp-for="Breed" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Tuổi</label>
+        <input asp-for="Age" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Giới tính</label>
+        <input asp-for="Gender" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Giá</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Số lượng</label>
+        <input asp-for="Stock" class="form-control" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Thêm</button>
+    <a href="/Home/Thucung" class="btn btn-success">Hủy</a>
+</form>

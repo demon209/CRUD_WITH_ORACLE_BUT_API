@@ -1,0 +1,40 @@
+﻿@model PetListViewModel
+
+<h2>Trang quản lý thú cưng</h2>
+
+<input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên thú cưng..." />
+
+<div id="petListContainer">
+    @await Html.PartialAsync("_PetListPartial", Model)
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadPets(keyword = "", page = 1) {
+            $.ajax({
+                url: '/Home/LoadPetsPartial',
+                data: { keyword: keyword, page: page },
+                success: function (data) {
+                    $('#petListContainer').html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#searchBox').on('input', function () {
+                const keyword = $(this).val();
+                loadPets(keyword, 1); // reset về trang 1 khi tìm
+            });
+
+            // Sự kiện click phân trang
+            $(document).on('click', '.page-link', function (e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                const keyword = $('#searchBox').val();
+                loadPets(keyword, page);
+            });
+        });
+    </script>
+}

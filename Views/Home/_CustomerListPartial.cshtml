@@ -1,0 +1,52 @@
+@model CustomerListViewModel
+
+<h2>Danh sách khách hàng</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>CustomerId</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || Model.Customers.Count == 0)
+        {
+            <tr>
+                <td colspan="7" class="text-center">Không có khách hàng nào.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var customer in Model.Customers)
+            {
+                <tr>
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Address</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <form asp-action="DeleteCustomer" asp-controller="Home" method="post"
+                                onsubmit="return confirm('Bạn có chắc muốn xóa?');" class="d-inline">
+                                <input type="hidden" name="id" value="@customer.CustomerId" />
+                                <button type="submit" class="btn btn-danger">🙅‍♂️ Xóa</button>
+                            </form>
+                            <a asp-action="EditCustomer" asp-route-id="@customer.CustomerId" class="btn btn-warning">👨‍🔧
+                                Sửa</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+}
+    </tbody>
+</table>
+<a href="/Home/CreateCustomers" class="btn btn-success mb-3">🙋 Thêm khách hàng mới</a>
+<!-- Phân trang -->
+@Html.Partial("_Pagination", Model)
