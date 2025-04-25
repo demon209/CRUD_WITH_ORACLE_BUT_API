@@ -2,6 +2,23 @@
 
 <h2>Thêm khách hàng mới</h2>
 
+
+<!-- Hiển thị thông báo thành công nếu có -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<!-- Hiển thị lỗi từ ModelState nếu có -->
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="alert alert-danger">
+        @error.ErrorMessage
+    </div>
+}
+
 <form asp-action="CreateCustomers" method="post" class="form">
     <div class="form-group">
         <label>CustomerId</label>
@@ -29,5 +46,5 @@
     </div>
     <br />
     <button type="submit" class="btn btn-primary">Thêm</button>
-    <a href="/Home" class="btn btn-success">Hủy</a>
+    <a href="/Khachhang" class="btn btn-success">Hủy</a>
 </form>

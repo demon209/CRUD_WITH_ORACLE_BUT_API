@@ -4,6 +4,8 @@
 
 <form asp-action="EditProduct" method="post">
     <input type="hidden" asp-for="ProductId" />
+    <input type="hidden" name="page" value="@Context.Request.Query["page"]" />
+
     <label>Product Name</label>
     <input asp-for="ProductName" class="form-control" />
     <label>Category</label>

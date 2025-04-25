@@ -33,12 +33,13 @@
                     <td>@customer.Address</td>
                     <td>
                         <div class="d-flex gap-2">
-                            <form asp-action="DeleteCustomer" asp-controller="Home" method="post"
+                            <form asp-action="DeleteCustomer" asp-controller="Customer" method="post"
                                 onsubmit="return confirm('Bạn có chắc muốn xóa?');" class="d-inline">
                                 <input type="hidden" name="id" value="@customer.CustomerId" />
+                                 <input type="hidden" name="page" value="@Model.CurrentPage" />
                                 <button type="submit" class="btn btn-danger">🙅‍♂️ Xóa</button>
                             </form>
-                            <a asp-action="EditCustomer" asp-route-id="@customer.CustomerId" class="btn btn-warning">👨‍🔧
+                            <a asp-action="EditCustomer" asp-route-id="@customer.CustomerId" asp-route-page="@Model.CurrentPage" class="btn btn-warning">👨‍🔧
                                 Sửa</a>
                         </div>
                     </td>
@@ -47,6 +48,7 @@
 }
     </tbody>
 </table>
-<a href="/Home/CreateCustomers" class="btn btn-success mb-3">🙋 Thêm khách hàng mới</a>
+<a asp-action="CreateCustomers" asp-controller="Customer" class="btn btn-success mb-3">🙋 Thêm khách hàng mới</a>
 <!-- Phân trang -->
-@Html.Partial("_Pagination", Model)
+@await Html.PartialAsync("_Pagination", Model)
+

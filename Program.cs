@@ -1,6 +1,7 @@
 using DotNetEnv;
+using MVC.router;
 
-DotNetEnv.Env.Load(); // ⬅️ Load .env sớm nhất có thể, trước builder
+DotNetEnv.Env.Load(); // Load .env sớm nhất có thể, trước builder
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ Console.WriteLine("ENV connStr: " + Environment.GetEnvironmentVariable("ORACLE_C
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// Gọi test kết nối
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,29 +25,12 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Intro}/{id?}");
+// Sử dụng UseEndpoints để đăng ký các routes
+app.UseEndpoints(endpoints =>
+{
+    RouteConfig.RegisterRoutes(endpoints); 
 
-app.MapControllerRoute(
-    name: "khachhang_route",
-    pattern: "khachhang",
-    defaults: new { controller = "Home", action = "Khachhang" });
+    
+});
 
-app.MapControllerRoute(
-    name: "thucung_route",
-    pattern: "thucung",
-    defaults: new { controller = "Home", action = "Thucung" });
-app.MapControllerRoute(
-    name: "sanpham_route",
-    pattern: "sanpham",
-    defaults: new { controller = "Home", action = "Sanpham" });
-app.MapControllerRoute(
-    name: "hoadon_route",
-    pattern: "hoadon",
-    defaults: new { controller = "Home", action = "Hoadon" });
-app.MapControllerRoute(
-    name: "hoadonchitiet_route",
-    pattern: "hoadonchitiet",
-    defaults: new { controller = "Home", action = "Hoadonchitiet" });
 app.Run();

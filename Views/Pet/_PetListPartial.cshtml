@@ -37,11 +37,12 @@
                     <td>@pet.Price</td>
                     <td>@pet.Stock</td>
                     <td>
-                        <form asp-action="DeletePet" asp-controller="Home" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
+                        <form asp-action="DeletePet" asp-controller="Pet" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
                             <input type="hidden" name="id" value="@pet.PetId" />
+                             <input type="hidden" name="page" value="@Model.CurrentPage" />
                             <button type="submit" class="btn btn-danger btn-sm">😾 Xóa</button>
                         </form>
-                        <a asp-action="EditPet" asp-route-id="@pet.PetId" class="btn btn-warning btn-sm">😼 Sửa</a>
+                        <a asp-action="EditPet" asp-route-id="@pet.PetId" asp-route-page="@Model.CurrentPage" class="btn btn-warning btn-sm">😼 Sửa</a>
                     </td>
                 </tr>
             }
@@ -49,7 +50,9 @@
     </tbody>
 </table>
 
-<a href="/Home/CreatePets" class="btn btn-success mb-3">🐸 Thêm thú cưng</a>
+<a asp-action="CreatePets" asp-controller="Pet" class="btn btn-success mb-3">🐸 Thêm thú cưng</a>
+
 
 <!-- Phân trang -->
-@Html.Partial("_Pagination", Model)
+@await Html.PartialAsync("_Pagination", Model)
+

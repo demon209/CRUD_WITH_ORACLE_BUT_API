@@ -4,6 +4,7 @@
 
 <form asp-action="EditPet" method="post">
     <input type="hidden" asp-for="PetId" />
+    <input type="hidden" name="page" value="@Context.Request.Query["page"]" />
 
     <label>Pet Name</label>
     <input asp-for="PetName" class="form-control" />

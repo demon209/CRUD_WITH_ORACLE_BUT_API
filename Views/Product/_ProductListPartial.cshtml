@@ -31,21 +31,22 @@
                     <td>@product.ProductStock</td>
                     <td>
                         <div class="d-flex gap-2">
-                            <form asp-action="DeleteProduct" asp-controller="Home" method="post"
+                            <form asp-action="DeleteProduct" asp-controller="Product" method="post"
                                 onsubmit="return confirm('Bạn có chắc muốn xóa?');" class="d-inline">
                                 <input type="hidden" name="id" value="@product.ProductId" />
+                                <input type="hidden" name="page" value="@Model.CurrentPage" /> <!-- 👈 thêm dòng này -->
                                 <button type="submit" class="btn btn-danger">🙅‍♂️ Xóa</button>
                             </form>
-                            <a asp-action="EditProduct" asp-route-id="@product.ProductId" class="btn btn-warning">👨‍🔧
-                                Sửa</a>
+                            <a asp-action="EditProduct" asp-route-id="@product.ProductId" asp-route-page="@Model.CurrentPage" class="btn btn-warning">👨‍🔧 Sửa</a>
                         </div>
                     </td>
+
                 </tr>
             }
         }
     </tbody>
 </table>
-<a href="/Home/CreateProducts" class="btn btn-success mb-3">🛒 Thêm sản phẩm</a>
+<a asp-action="CreateProducts" asp-controller="Product" class="btn btn-success mb-3">🛒 Thêm sản phẩm</a>
 
 <!-- Phân trang -->
-@Html.Partial("_Pagination", Model)
+@await Html.PartialAsync("_Pagination", Model)

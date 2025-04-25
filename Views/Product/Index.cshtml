@@ -5,7 +5,7 @@
 <input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên sản phẩm..." />
 
 <div id="productListContainer">
-    @await Html.PartialAsync("_ProductListPartial", Model)
+    @await Html.PartialAsync("_ProductListPartial.cshtml", Model)
 </div>
 
 
@@ -14,7 +14,7 @@
     <script>
         function loadProducts(keyword = "", page = 1) {
             $.ajax({
-                url: '/Home/LoadProductsPartial',
+                url: '/Product/LoadProductsPartial',
                 data: { keyword: keyword, page: page },
                 success: function (data) {
                     $('#productListContainer').html(data);
@@ -35,6 +35,18 @@
                 const keyword = $('#searchBox').val();
                 loadProducts(keyword, page);
             });
+                        // SweetAlert nếu có TempData
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: '@TempData["Success"]',
+                        confirmButtonText: 'OK'
+                    });
+                </text>
+            }
         });
     </script>
 }

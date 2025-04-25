@@ -4,6 +4,7 @@
 
 <form asp-action="EditCustomer" method="post">
     <input type="hidden" asp-for="CustomerId" />
+    <input type="hidden" name="page" value="@Context.Request.Query["page"]" />
 
     <label>First Name</label>
     <input asp-for="FirstName" class="form-control" />

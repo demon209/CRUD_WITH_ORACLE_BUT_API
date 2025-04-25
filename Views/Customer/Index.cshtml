@@ -5,7 +5,7 @@
 <input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên khách hàng..." />
 
 <div id="customerListContainer">
-    @await Html.PartialAsync("_CustomerListPartial", Model)
+    @await Html.PartialAsync("_CustomerListPartial.cshtml", Model)
 </div>
 
 
@@ -14,7 +14,7 @@
     <script>
         function loadCustomers(keyword = "", page = 1) {
             $.ajax({
-                url: '/Home/LoadCustomerPartial',
+                url: '/Customer/LoadCustomerPartial',
                 data: { keyword: keyword, page: page },
                 success: function (data) {
                     $('#customerListContainer').html(data);
@@ -35,6 +35,18 @@
                 const keyword = $('#searchBox').val();
                 loadCustomers(keyword, page);
             });
+                        // SweetAlert nếu có TempData
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: '@TempData["Success"]',
+                        confirmButtonText: 'OK'
+                    });
+                </text>
+            }
         });
     </script>
 }

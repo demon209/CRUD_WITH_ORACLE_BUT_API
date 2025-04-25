@@ -20,28 +20,20 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/CreateCustomers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmVhdGVDdXN0b21lcnMuY3NodG1s
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Customer/CreateCustomers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ3JlYXRlQ3VzdG9tZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/CreatePets.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmVhdGVQZXRzLmNzaHRtbA==
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Customer/EditCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcRWRpdEN1c3RvbWVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/CreateProducts.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDcmVhdGVQcm9kdWN0cy5jc2h0bWw=
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Customer/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/EditCustomer.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFZGl0Q3VzdG9tZXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/EditPet.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFZGl0UGV0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/EditProduct.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFZGl0UHJvZHVjdC5jc2h0bWw=
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Customer/_CustomerListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcX0N1c3RvbWVyTGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Hoadon.cshtml]
@@ -56,28 +48,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbnRyby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Khachhang.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxLaGFjaGhhbmcuY3NodG1s
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Pet/CreatePets.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGV0XENyZWF0ZVBldHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Sanpham.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTYW5waGFtLmNzaHRtbA==
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Pet/EditPet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGV0XEVkaXRQZXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Thucung.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUaHVjdW5nLmNzaHRtbA==
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Pet/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGV0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/_CustomerListPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfQ3VzdG9tZXJMaXN0UGFydGlhbC5jc2h0bWw=
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Pet/_PetListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGV0XF9QZXRMaXN0UGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/_PetListPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUGV0TGlzdFBhcnRpYWwuY3NodG1s
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Product/CreateProducts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxDcmVhdGVQcm9kdWN0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/_ProductListPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxfUHJvZHVjdExpc3RQYXJ0aWFsLmNzaHRtbA==
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Product/EditProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxFZGl0UHJvZHVjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Product/_ProductListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxfUHJvZHVjdExpc3RQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Shared/Error.cshtml]
