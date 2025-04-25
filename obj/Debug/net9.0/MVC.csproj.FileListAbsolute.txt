@@ -110,3 +110,4 @@ D:\Workspace\LearnC#(Dotnet)\MVC\obj\Debug\net9.0\compressed\9xj4m7d03h-nk8e3srj
 D:\Workspace\LearnC#(Dotnet)\MVC\obj\Debug\net9.0\compressed\t1h7788lil-nk8e3srjs6.gz
 D:\Workspace\LearnC#(Dotnet)\MVC\obj\Debug\net9.0\compressed\8evjnm15m1-b74l1nzj4j.gz
 D:\Workspace\LearnC#(Dotnet)\MVC\obj\Debug\net9.0\compressed\02zxdw598v-kx7uk5mzc9.gz
+D:\Workspace\LearnC#(Dotnet)\MVC\obj\Debug\net9.0\MVC.sourcelink.json
