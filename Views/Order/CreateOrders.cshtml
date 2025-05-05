@@ -1,0 +1,39 @@
+@model MVC.Models.Order
+
+<h2>Thêm mới hóa đơn</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="alert alert-danger">
+        @error.ErrorMessage
+    </div>
+}
+
+<form asp-action="CreateOrders" method="post" class="form">
+    <div class="form-group">
+        <label>Order Id</label>
+        <input asp-for="OrderId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>CustomerId</label>
+        <input asp-for="CustomerId" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="OrderDate">Order Date</label>
+        <input asp-for="OrderDate" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+        <label>Total Amount</label>
+        <input asp-for="TotalAmount" class="form-control" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Thêm</button>
+    <a href="/Hoadon" class="btn btn-success">Hủy</a>
+</form>

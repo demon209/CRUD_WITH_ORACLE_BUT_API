@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Collections.Generic;
 using System;
 using MVC.Models;  // Đảm bảo thêm đúng namespace cho Pet model
@@ -182,26 +183,38 @@ namespace YourNamespace.Controllers
                 {
                     conn.Open();
 
-                    string insertQuery = @"
-                    INSERT INTO usertest.product (product_id, product_name, category, price, stock)
-                    VALUES (:ProductId, :ProductName, :ProductCategory, :ProductPrice, :ProductStock)";
-
-                    using (var cmd = new OracleCommand(insertQuery, conn))
+                    using (var cmd = new OracleCommand("add_product", conn))
                     {
-                        cmd.Parameters.Add(new OracleParameter("ProductId", product.ProductId));
-                        cmd.Parameters.Add(new OracleParameter("ProductName", product.ProductName));
-                        cmd.Parameters.Add(new OracleParameter("ProductCategory", product.ProductCategory));
-                        cmd.Parameters.Add(new OracleParameter("ProductPrice", product.ProductPrice));
-                        cmd.Parameters.Add(new OracleParameter("ProductStock", product.ProductStock));
-                        int result = cmd.ExecuteNonQuery();
-                        if (result > 0)
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Truyền tham số đầu vào cho stored procedure
+                        cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = product.ProductId;
+                        cmd.Parameters.Add("p_product_name", OracleDbType.Varchar2).Value = product.ProductName;
+                        cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = product.ProductCategory;
+                        cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = product.ProductPrice;
+                        cmd.Parameters.Add("p_stock", OracleDbType.Int32).Value = product.ProductStock;
+
+                        // Tham số OUT để nhận message từ procedure
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = "Them san pham thanh cong!";
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi stored procedure
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông điệp trả về
+                        string resultMessage = messageParam.Value?.ToString();
+
+                        if (resultMessage.Contains("Them san pham thanh cong!"))
+                        {
+                            TempData["Success"] = resultMessage;
                             return RedirectToAction("Index");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "   Thêm thất bại.");
+                            ModelState.AddModelError("", resultMessage);
                         }
                     }
                 }
@@ -210,8 +223,10 @@ namespace YourNamespace.Controllers
                     ModelState.AddModelError("", "Lỗi: " + ex.Message);
                 }
             }
+
             return View(product);
         }
+
 
 
         // -----------------------------------------------------------------------------------------------------------------------------
@@ -279,43 +294,50 @@ namespace YourNamespace.Controllers
                 {
                     conn.Open();
 
-                    string updateQuery = @"
-                UPDATE usertest.product
-                SET product_name = :ProductName,
-                    category = :ProductCategory,
-                    price = :ProductPrice,
-                    stock = :ProductStock
-                WHERE product_id = :ProductId";
-
-                    using (var cmd = new OracleCommand(updateQuery, conn))
+                    using (var cmd = new OracleCommand("update_product", conn))
                     {
-                        cmd.Parameters.Add(new OracleParameter("ProductName", product.ProductName));
-                        cmd.Parameters.Add(new OracleParameter("ProductCategory", product.ProductCategory));
-                        cmd.Parameters.Add(new OracleParameter("ProductPrice", product.ProductPrice));
-                        cmd.Parameters.Add(new OracleParameter("ProductStock", product.ProductStock));
-                        cmd.Parameters.Add(new OracleParameter("ProductId", product.ProductId));
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        int result = cmd.ExecuteNonQuery();
+                        // Các tham số đầu vào
+                        cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = product.ProductId;
+                        cmd.Parameters.Add("p_product_name", OracleDbType.Varchar2).Value = product.ProductName;
+                        cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = product.ProductCategory;
+                        cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = product.ProductPrice;
+                        cmd.Parameters.Add("p_stock", OracleDbType.Int32).Value = product.ProductStock;
 
-                        if (result > 0)
+                        // Tham số đầu ra để lấy thông báo từ stored procedure
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = "Cap nhat san pham thanh cong!";
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi stored procedure
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo kết quả
+                        string resultMessage = messageParam.Value?.ToString();
+
+                        if (!string.IsNullOrEmpty(resultMessage) && resultMessage.Contains("Cap nhat thong tin san pham thanh cong!"))
+                        {
+                            TempData["Success"] = resultMessage;
                             return RedirectToAction("Index", new { page = page });
                         }
                         else
                         {
-                            ModelState.AddModelError("", "   Không tìm thấy sản phẩm cần cập nhật.");
+                            ModelState.AddModelError("", resultMessage ?? "Đã xảy ra lỗi không xác định.");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "   Lỗi cập nhật: " + ex.Message);
+                ModelState.AddModelError("", "Lỗi cập nhật: " + ex.Message);
             }
 
             return View(product);
         }
+
 
 
         // --------------------------------------------------------------------------------------------------------------------------------
@@ -329,19 +351,36 @@ namespace YourNamespace.Controllers
                 using (var conn = new OracleConnection(_connectionString))
                 {
                     conn.Open();
-                    string deleteQuery = "DELETE FROM usertest.product WHERE product_id = :ProductId";
-                    using (var cmd = new OracleCommand(deleteQuery, conn))
-                    {
-                        cmd.Parameters.Add(new OracleParameter("ProductId", id));
-                        int rowsAffected = cmd.ExecuteNonQuery();
 
-                        if (rowsAffected > 0)
+                    using (var cmd = new OracleCommand("delete_product", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Tham số đầu vào
+                        cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = id;
+
+                        // Tham số OUT để nhận message từ procedure
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = "Xoa san pham thanh cong!";
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi procedure
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo trả về
+                        string resultMessage = messageParam.Value?.ToString();
+
+                        // Gán thông báo vào TempData để hiển thị
+                        if (!string.IsNullOrEmpty(resultMessage) && resultMessage.Contains("Xoa san pham thanh cong!"))
+                        {
+                            TempData["Success"] = resultMessage;
+                            return RedirectToAction("Index", new { page = page });
                         }
                         else
                         {
-                            TempData["Error"] = "Không tìm thấy sản phẩm để xóa.";
+                            TempData["Error"] = resultMessage;
                         }
                     }
                 }
@@ -351,8 +390,9 @@ namespace YourNamespace.Controllers
                 TempData["Error"] = "Lỗi khi xóa: " + ex.Message;
             }
 
-            return RedirectToAction("Index", new { page = page }); // GIỮ LẠI TRANG HIỆN TẠI
+            return RedirectToAction("Index", new { page = page });
         }
+
 
     }
 }

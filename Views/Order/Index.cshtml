@@ -1,0 +1,57 @@
+@model OrderListViewModel
+
+<h2>Trang quản lý hóa đơn</h2>
+
+<div class="d-flex align-items-center mb-3" style="width: 350px;">
+    <label for="searchBox" class="me-2 mb-0">Tìm kiếm theo ngày:</label>
+    <input type="date" id="searchBox" class="form-control" style="width: 180px;" />
+</div>
+
+
+
+<div id="orderListContainer">
+    @await Html.PartialAsync("_OrderListPartial.cshtml", Model)
+</div>
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadCustomers(keyword = "", page = 1) {
+            $.ajax({
+                url: '/Order/LoadOrdersPartial',
+                data: { keyword: keyword, page: page },
+                success: function (data) {
+                    $('#orderListContainer').html(data);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#searchBox').on('input', function () {
+                const keyword = $(this).val();
+                loadCustomers(keyword, 1); // reset về trang 1 khi tìm
+            });
+
+            // Sự kiện click phân trang
+            $(document).on('click', '.page-link', function (e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                const keyword = $('#searchBox').val();
+                loadCustomers(keyword, page);
+            });
+                        // SweetAlert nếu có TempData
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: '@TempData["Success"]',
+                        confirmButtonText: 'OK'
+                    });
+                </text>
+            }
+        });
+    </script>
+}

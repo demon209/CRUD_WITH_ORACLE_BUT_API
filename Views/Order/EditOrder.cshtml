@@ -1,0 +1,33 @@
+@model MVC.Models.Order
+
+<h2>Sửa hóa đơn Có id: @Model.OrderId</h2>
+
+@* Hiển thị lỗi *@
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="alert alert-danger">
+        @error.ErrorMessage
+    </div>
+}
+
+<form asp-action="EditOrder" method="post">
+    <input type="hidden" asp-for="OrderId" />
+    <input type="hidden" name="page" value="@Context.Request.Query["page"]" />
+
+    <div class="form-group">
+        <label for="CustomerId">CustomerId</label>
+        <input asp-for="CustomerId" class="form-control" id="CustomerId" />
+    </div>
+
+    <div class="form-group">
+        <label for="OrderDate">Order Date</label>
+        <input asp-for="OrderDate" class="form-control" id="OrderDate" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label for="TotalAmount">Total Amount</label>
+        <input asp-for="TotalAmount" class="form-control" id="TotalAmount" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
+</form>

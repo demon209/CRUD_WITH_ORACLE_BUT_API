@@ -36,16 +36,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcX0N1c3RvbWVyTGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Hoadon.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb2Fkb24uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Hoadonchitiet.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIb2Fkb25jaGl0aWV0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Home/Intro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbnRyby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Order/CreateOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcQ3JlYXRlT3JkZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Order/EditOrder.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRWRpdE9yZGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Order/_OrderListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcX09yZGVyTGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Workspace/LearnC\#(Dotnet)/MVC/Views/Pet/CreatePets.cshtml]

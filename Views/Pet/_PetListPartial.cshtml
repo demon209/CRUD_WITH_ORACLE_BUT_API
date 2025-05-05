@@ -1,9 +1,10 @@
 @model PetListViewModel
 
-<h2>Danh sách thú cưng</h2>
+<h2 class="mb-4">📋 Danh sách thú cưng</h2>
 
-<table class="table">
-    <thead>
+<div class="table-responsive">
+<table class="table table-striped table-bordered aligh-middle text-center">
+    <thead class="table-light">
         <tr>
             <th>PetId</th>
             <th>Tên</th>
@@ -13,15 +14,16 @@
             <th>Giới tính</th>
             <th>Giá</th>
             <th>Số lượng</th>
-            <th></th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
         @if (Model.Pets == null || Model.Pets.Count == 0)
         {
-            <tr>
-                <td colspan="9" class="text-center">Không có thú cưng nào.</td>
-            </tr>
+            <td colspan="9" class="text-center text-danger">
+                Không có thú cưng nào. Vui lòng quay lại trang trước hoặc tạo mới.
+            </td>
+
         }
         else
         {
@@ -37,22 +39,27 @@
                     <td>@pet.Price</td>
                     <td>@pet.Stock</td>
                     <td>
-                        <form asp-action="DeletePet" asp-controller="Pet" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                        <form asp-action="DeletePet" asp-controller="Pet" method="post"
+                            onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
                             <input type="hidden" name="id" value="@pet.PetId" />
-                             <input type="hidden" name="page" value="@Model.CurrentPage" />
+                            <input type="hidden" name="page" value="@Model.CurrentPage" />
                             <button type="submit" class="btn btn-danger btn-sm">😾 Xóa</button>
                         </form>
-                        <a asp-action="EditPet" asp-route-id="@pet.PetId" asp-route-page="@Model.CurrentPage" class="btn btn-warning btn-sm">😼 Sửa</a>
+                        <a asp-action="EditPet" asp-route-id="@pet.PetId" asp-route-page="@Model.CurrentPage"
+                            class="btn btn-warning btn-sm">😼 Sửa</a>
+                        </div>
                     </td>
                 </tr>
             }
         }
     </tbody>
 </table>
+</div>
 
-<a asp-action="CreatePets" asp-controller="Pet" class="btn btn-success mb-3">🐸 Thêm thú cưng</a>
-
-
-<!-- Phân trang -->
-@await Html.PartialAsync("_Pagination", Model)
-
+<div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
+    <a asp-action="CreatePets" asp-controller="Pet" class="btn btn-success mb-2">🐸 Thêm thú cưng</a>
+    <div>
+        @await Html.PartialAsync("_Pagination", Model)
+    </div>
+</div>

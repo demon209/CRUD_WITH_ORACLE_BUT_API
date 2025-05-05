@@ -24,3 +24,10 @@ public class ProductListViewModel : PaginationViewModel
 {
     public List<Product> Products { get; set; }
 }
+
+public class OrderListViewModel : PaginationViewModel
+{
+    public List<Order> Orders { get; set; }
+}
+
+

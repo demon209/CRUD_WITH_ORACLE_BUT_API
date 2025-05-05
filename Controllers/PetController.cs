@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Collections.Generic;
 using System;
 using MVC.Models;  // Đảm bảo thêm đúng namespace cho Pet model
@@ -185,12 +186,12 @@ namespace YourNamespace.Controllers
                 {
                     conn.Open();
 
-                    string insertQuery = @"
-                INSERT INTO usertest.pet (pet_id, pet_name, pet_type, breed, age, gender, price, stock)
-                VALUES (:PetId, :PetName, :PetType, :Breed, :Age, :Gender, :Price, :Stock)";
-
-                    using (var cmd = new OracleCommand(insertQuery, conn))
+                    // Sử dụng stored procedure và chỉ định kiểu CommandType
+                    using (var cmd = new OracleCommand("add_pet", conn))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Thêm các tham số vào stored procedure
                         cmd.Parameters.Add(new OracleParameter("PetId", pet.PetId));
                         cmd.Parameters.Add(new OracleParameter("PetName", pet.PetName));
                         cmd.Parameters.Add(new OracleParameter("PetType", pet.PetType));
@@ -200,15 +201,28 @@ namespace YourNamespace.Controllers
                         cmd.Parameters.Add(new OracleParameter("Price", pet.Price));
                         cmd.Parameters.Add(new OracleParameter("Stock", pet.Stock));
 
-                        int result = cmd.ExecuteNonQuery();
-                        if (result > 0)
+                        // Thêm OUT parameter để nhận thông báo từ stored procedure
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = "Them thu cung thanh cong!";
-                            return RedirectToAction("Thucung");
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi stored procedure
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo từ OUT parameter
+                        string message = messageParam.Value.ToString();
+
+                        // Kiểm tra thông báo và hiển thị
+                        if (message.Contains("Them thu cung thanh cong!"))
+                        {
+                            TempData["Success"] = message;
+                            return RedirectToAction("Index");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "Thêm thất bại.");
+                            ModelState.AddModelError("", message);
                         }
                     }
                 }
@@ -222,142 +236,174 @@ namespace YourNamespace.Controllers
             return View(pet);
         }
 
-    [HttpPost]
-    public IActionResult DeletePet(int id, int page = 1)
-    {
-        try
+        [HttpPost]
+        public IActionResult DeletePet(int id, int page = 1)
         {
-            using (var conn = new OracleConnection(_connectionString))
+            try
             {
-                conn.Open();
-                string deleteQuery = "DELETE FROM usertest.pet WHERE pet_id = :PetId";
-                using (var cmd = new OracleCommand(deleteQuery, conn))
+                using (var conn = new OracleConnection(_connectionString))
                 {
-                    cmd.Parameters.Add(new OracleParameter("PetId", id));
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    conn.Open();
 
-                    if (rowsAffected > 0)
+                    // Tạo đối tượng OracleCommand để gọi thủ tục delete_pet
+                    using (var cmd = new OracleCommand("delete_pet", conn))
                     {
-                        TempData["Success"] = "Xoa thu cung thanh cong!";
-                    }
-                    else
-                    {
-                        TempData["Error"] = "   Không tìm thấy thú cưng để xóa.";
-                    }
-                }
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                conn.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            TempData["Error"] = "   Lỗi khi xóa: " + ex.Message;
-        }
+                        // Thêm tham số đầu vào
+                        cmd.Parameters.Add(new OracleParameter("p_pet_id", id));
 
-        return RedirectToAction("Index", new { page = page });
-
-    }
-    [HttpGet]
-    public IActionResult EditPet(int id)
-    {
-        Pet pet = null;
-
-        try
-        {
-            using (var conn = new OracleConnection(_connectionString))
-            {
-                conn.Open();
-
-                string selectQuery = "SELECT pet_id, pet_name, pet_type, breed, age, gender, price, stock FROM usertest.pet WHERE pet_id = :PetId";
-
-                using (var cmd = new OracleCommand(selectQuery, conn))
-                {
-                    cmd.Parameters.Add(new OracleParameter("PetId", id));
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
+                        // Thêm tham số đầu ra để nhận thông báo
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            pet = new Pet
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi thủ tục
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo từ tham số đầu ra
+                        string message = messageParam.Value.ToString();
+
+                        // Kiểm tra thông báo và xử lý
+                        if (message.Contains("Xoa thu cung thanh cong!"))
+                        {
+                            TempData["Success"] = message;
+                            return RedirectToAction("Index", new { page = page });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", message);
+                        }
+                    }
+
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Lỗi khi xóa: " + ex.Message; // Thông báo lỗi nếu có lỗi ngoài thủ tục
+            }
+
+            // Sau khi xóa xong, chuyển hướng về trang danh sách thú cưng với số trang hiện tại
+            return RedirectToAction("Index", new { page = page });
+        }
+
+        [HttpGet]
+        public IActionResult EditPet(int id)
+        {
+            Pet pet = null;
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    string selectQuery = "SELECT pet_id, pet_name, pet_type, breed, age, gender, price, stock FROM usertest.pet WHERE pet_id = :PetId";
+
+                    using (var cmd = new OracleCommand(selectQuery, conn))
+                    {
+                        cmd.Parameters.Add(new OracleParameter("PetId", id));
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
                             {
-                                PetId = reader.GetInt32(0),
-                                PetName = reader.GetString(1),
-                                PetType = reader.GetString(2),
-                                Breed = reader.GetString(3),
-                                Age = reader.GetInt32(4),
-                                Gender = reader.GetString(5),
-                                Price = reader.GetDecimal(6),
-                                Stock = reader.GetInt32(7)
-                            };
+                                pet = new Pet
+                                {
+                                    PetId = reader.GetInt32(0),
+                                    PetName = reader.GetString(1),
+                                    PetType = reader.GetString(2),
+                                    Breed = reader.GetString(3),
+                                    Age = reader.GetInt32(4),
+                                    Gender = reader.GetString(5),
+                                    Price = reader.GetDecimal(6),
+                                    Stock = reader.GetInt32(7)
+                                };
+                            }
                         }
                     }
                 }
-            }
 
-            if (pet == null)
-            {
-                return NotFound();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Lỗi khi lấy thú cưng: " + ex.Message);
-            return View("Error");
-        }
-
-        return View(pet);
-    }
-
-    // post thông tin đã edit 
-    [HttpPost]
-    public IActionResult EditPet(Pet pet, int page = 1)
-    {
-        if (!ModelState.IsValid)
-            return View(pet);
-
-        try
-        {
-            using (var conn = new OracleConnection(_connectionString))
-            {
-                conn.Open();
-
-                string updateQuery = @"
-                UPDATE usertest.pet 
-                SET pet_name = :PetName, pet_type = :PetType, breed = :Breed, 
-                    age = :Age, gender = :Gender, price = :Price, stock = :Stock
-                WHERE pet_id = :PetId";
-
-                using (var cmd = new OracleCommand(updateQuery, conn))
+                if (pet == null)
                 {
-                    cmd.Parameters.Add(new OracleParameter("PetName", pet.PetName));
-                    cmd.Parameters.Add(new OracleParameter("PetType", pet.PetType));
-                    cmd.Parameters.Add(new OracleParameter("Breed", pet.Breed));
-                    cmd.Parameters.Add(new OracleParameter("Age", pet.Age));
-                    cmd.Parameters.Add(new OracleParameter("Gender", pet.Gender));
-                    cmd.Parameters.Add(new OracleParameter("Price", pet.Price));
-                    cmd.Parameters.Add(new OracleParameter("Stock", pet.Stock));
-                    cmd.Parameters.Add(new OracleParameter("PetId", pet.PetId));
-
-                    int result = cmd.ExecuteNonQuery();
-
-                    if (result > 0)
-                    {
-                        TempData["Success"] = " Cap nhat thu cung thanh cong!";
-                        return RedirectToAction("Index", new { page = page });
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "   Không tìm thấy thú cưng.");
-                    }
+                    return NotFound();
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            ModelState.AddModelError("", "   Lỗi cập nhật: " + ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi khi lấy thú cưng: " + ex.Message);
+                return View("Error");
+            }
+
+            return View(pet);
         }
 
-        return View(pet);
-    }
+        // post thông tin đã edit 
+        [HttpPost]
+        public IActionResult EditPet(Pet pet, int page = 1)
+        {
+            if (!ModelState.IsValid)
+                return View(pet);
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    conn.Open();
+
+                    // Tạo đối tượng OracleCommand để gọi thủ tục update_pet
+                    using (var cmd = new OracleCommand("update_pet", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Thêm các tham số đầu vào
+                        cmd.Parameters.Add(new OracleParameter("p_pet_id", pet.PetId));
+                        cmd.Parameters.Add(new OracleParameter("p_pet_name", pet.PetName));
+                        cmd.Parameters.Add(new OracleParameter("p_pet_type", pet.PetType));
+                        cmd.Parameters.Add(new OracleParameter("p_breed", pet.Breed));
+                        cmd.Parameters.Add(new OracleParameter("p_age", pet.Age));
+                        cmd.Parameters.Add(new OracleParameter("p_gender", pet.Gender));
+                        cmd.Parameters.Add(new OracleParameter("p_price", pet.Price));
+                        cmd.Parameters.Add(new OracleParameter("p_stock", pet.Stock));
+
+                        // Thêm tham số đầu ra để nhận thông báo
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi thủ tục
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo từ tham số đầu ra
+                        string message = messageParam.Value.ToString();
+
+                        // Hiển thị thông báo thành công hoặc lỗi
+                        if (message.Contains("Cap nhat thong tin thu cung thanh cong!"))
+                        {
+                            TempData["Success"] = message;
+                            return RedirectToAction("Index", new { page = page });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", message);
+                        }
+                    }
+
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Lỗi khi cập nhật: " + ex.Message;
+            }
+
+            return RedirectToAction("Index", new { page = page });
+        }
+
     }
 }

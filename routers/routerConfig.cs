@@ -29,12 +29,8 @@ namespace MVC.router
             endpoints.MapControllerRoute(
                 name: "hoadon_route",
                 pattern: "hoadon",
-                defaults: new { controller = "Home", action = "Hoadon" });
+                defaults: new { controller = "Order", action = "Index" });
 
-            endpoints.MapControllerRoute(
-                name: "hoadonchitiet_route",
-                pattern: "hoadonchitiet",
-                defaults: new { controller = "Home", action = "Hoadonchitiet" });
         }
     }
 }

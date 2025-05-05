@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 using System.Collections.Generic;
 using System;
 using MVC.Models;  // Đảm bảo thêm đúng namespace cho Pet model
@@ -172,6 +173,7 @@ namespace YourNamespace.Controllers
         {
             return View();
         }
+
         // Phương thức post gửi thông tin từ view để tạo mới khách hàng
         [HttpPost]
         public IActionResult CreateCustomers(Customer customer)
@@ -187,29 +189,41 @@ namespace YourNamespace.Controllers
                 {
                     conn.Open();
 
-                    string insertQuery = @"
-                    INSERT INTO usertest.customer (customer_id, first_name, last_name, phone_number, email, address)
-                    VALUES (:CustomerId, :FirstName, :LastName, :PhoneNumber, :Email, :Address)";
-
-                    using (var cmd = new OracleCommand(insertQuery, conn))
+                    using (var cmd = new OracleCommand("add_customer", conn))
                     {
-                        cmd.Parameters.Add(new OracleParameter("CustomerId", customer.CustomerId));
-                        cmd.Parameters.Add(new OracleParameter("FirstName", customer.FirstName));
-                        cmd.Parameters.Add(new OracleParameter("LastName", customer.LastName));
-                        cmd.Parameters.Add(new OracleParameter("PhoneNumber", customer.PhoneNumber));
-                        cmd.Parameters.Add(new OracleParameter("Email", customer.Email));
-                        cmd.Parameters.Add(new OracleParameter("Address", customer.Address));
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        int result = cmd.ExecuteNonQuery();
-                        if (result > 0)
+                        // Thêm các tham số đầu vào cho thủ tục
+                        cmd.Parameters.Add(new OracleParameter("p_customer_id", customer.CustomerId));
+                        cmd.Parameters.Add(new OracleParameter("p_first_name", customer.FirstName));
+                        cmd.Parameters.Add(new OracleParameter("p_last_name", customer.LastName));
+                        cmd.Parameters.Add(new OracleParameter("p_phone_number", customer.PhoneNumber));
+                        cmd.Parameters.Add(new OracleParameter("p_email", customer.Email));
+                        cmd.Parameters.Add(new OracleParameter("p_address", customer.Address));
+
+                        // Thêm tham số OUT để nhận thông báo
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = " Them khach hang thanh cong!";
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi thủ tục
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo từ thủ tục và hiển thị
+                        string message = messageParam.Value.ToString();
+
+                        if (message.Contains("Them khach hang thanh cong!"))
+                        {
+                            TempData["Success"] = message;
                             return RedirectToAction("Index");
                         }
                         else
                         {
-                            ModelState.AddModelError("", "   Thêm thất bại.");
+                            ModelState.AddModelError("", message);
                         }
+
                     }
                 }
                 catch (Exception ex)
@@ -217,8 +231,11 @@ namespace YourNamespace.Controllers
                     ModelState.AddModelError("", "Lỗi: " + ex.Message);
                 }
             }
+
+            // Trả về lại view nếu có lỗi
             return View(customer);
         }
+
 
         // xóa khách hàng
         [HttpPost]
@@ -229,19 +246,37 @@ namespace YourNamespace.Controllers
                 using (var conn = new OracleConnection(_connectionString))
                 {
                     conn.Open();
-                    string deleteQuery = "DELETE FROM usertest.customer WHERE customer_id = :CustomerId";
-                    using (var cmd = new OracleCommand(deleteQuery, conn))
-                    {
-                        cmd.Parameters.Add(new OracleParameter("CustomerId", id));
-                        int rowsAffected = cmd.ExecuteNonQuery();
 
-                        if (rowsAffected > 0)
+                    // Gọi stored procedure để xóa khách hàng
+                    string deleteCustomerProcedure = "delete_customer";  // Tên stored procedure đã tạo
+                    using (var cmd = new OracleCommand(deleteCustomerProcedure, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Thêm tham số vào stored procedure
+                        cmd.Parameters.Add(new OracleParameter("p_customer_id", id));
+
+                        // Thêm tham số OUT để nhận thông báo
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
                         {
-                            TempData["Success"] = "Xoa khach hang thanh cong!";
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(messageParam);
+
+                        // Thực thi stored procedure
+                        cmd.ExecuteNonQuery();
+
+                        // Lấy thông báo trả về từ stored procedure
+                        string resultMessage = messageParam.Value.ToString();
+
+                        if (resultMessage.Contains("Xoa khach hang thanh cong!"))
+                        {
+                            TempData["Success"] = resultMessage;
+                            return RedirectToAction("Index", new { page = page });
                         }
                         else
                         {
-                            TempData["Error"] = "   Không tìm thấy khách hàng để xóa.";
+                            ModelState.AddModelError("", resultMessage);
                         }
                     }
 
@@ -250,12 +285,13 @@ namespace YourNamespace.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "   Lỗi khi xóa: " + ex.Message;
+                TempData["Error"] = "Lỗi khi xóa: " + ex.Message;
             }
 
             return RedirectToAction("Index", new { page = page });
-
         }
+
+
 
         [HttpGet]
         public IActionResult EditCustomer(int id)
@@ -319,41 +355,45 @@ namespace YourNamespace.Controllers
                 {
                     conn.Open();
 
-                    string updateQuery = @"
-                UPDATE usertest.customer 
-                SET first_name = :FirstName, last_name = :LastName, phone_number = :PhoneNumber, 
-                    email = :Email, address = :Address
-                WHERE customer_id = :CustomerId";
-
-                    using (var cmd = new OracleCommand(updateQuery, conn))
+                    using (var cmd = new OracleCommand("update_customer", conn))
                     {
-                        cmd.Parameters.Add(new OracleParameter("FirstName", customer.FirstName));
-                        cmd.Parameters.Add(new OracleParameter("LastName", customer.LastName));
-                        cmd.Parameters.Add(new OracleParameter("PhoneNumber", customer.PhoneNumber));
-                        cmd.Parameters.Add(new OracleParameter("Email", customer.Email));
-                        cmd.Parameters.Add(new OracleParameter("Address", customer.Address));
-                        cmd.Parameters.Add(new OracleParameter("CustomerId", customer.CustomerId));
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        int result = cmd.ExecuteNonQuery();
+                        cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = customer.CustomerId;
+                        cmd.Parameters.Add("p_first_name", OracleDbType.Varchar2).Value = customer.FirstName;
+                        cmd.Parameters.Add("p_last_name", OracleDbType.Varchar2).Value = customer.LastName;
+                        cmd.Parameters.Add("p_phone_number", OracleDbType.Varchar2).Value = customer.PhoneNumber;
+                        cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = customer.Email;
+                        cmd.Parameters.Add("p_address", OracleDbType.Varchar2).Value = customer.Address;
 
-                        if (result > 0)
+                        // Output parameter
+                        var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000);
+                        messageParam.Direction = ParameterDirection.Output;
+                        cmd.Parameters.Add(messageParam);
+
+                        cmd.ExecuteNonQuery();
+
+                        string message = messageParam.Value?.ToString();
+
+                        if (message.Contains("Cap nhat thong tin khach hang thanh cong!"))
                         {
-                            TempData["Success"] = " Cap nhat khach hang thanh cong!";
+                            TempData["Success"] = message;
                             return RedirectToAction("Index", new { page = page });
                         }
                         else
                         {
-                            ModelState.AddModelError("", "   Không tìm thấy khách hàng.");
+                            ModelState.AddModelError("", message);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "   Lỗi cập nhật: " + ex.Message);
+                ModelState.AddModelError("", "Lỗi hệ thống: " + ex.Message);
             }
 
             return View(customer);
         }
+
     }
 }
