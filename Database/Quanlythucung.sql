@@ -1,7 +1,3 @@
----------------------------------------------------------ORACLE DATABASE----------------------------------------------------
-
-
-
 
 ----------------------------------------------------------CREATE TABLE--------------------------------------------------------
 
@@ -131,7 +127,11 @@ DROP TABLE product CASCADE CONSTRAINTS;*/
 
 
 
+
+
 ---------------------------------------------------------------------INSERT DATA-------------------------------------------------------------
+
+
 
 INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
 ('Bobby', 'Chó', 'Poodle', 2, 'Đực', 4500000, 5);
@@ -219,7 +219,6 @@ INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
 
 
 COMMIT;
-
 
 
 
@@ -334,6 +333,19 @@ INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Training
 commit;
 
 
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------STORED PROCEDURES-------------------------------------------------------------------
+
+
 -- Thêm thú cung
 CREATE OR REPLACE PROCEDURE add_pet (
     p_pet_name IN VARCHAR2,
@@ -360,6 +372,7 @@ END;
 /
 
 
+--Thêm khách hàng
 CREATE OR REPLACE PROCEDURE add_customer(
     p_first_name    IN VARCHAR2,
     p_last_name     IN VARCHAR2,
@@ -420,7 +433,9 @@ END;
 
 
 
--- Thêm s?n ph?m
+
+
+-- Thêm sản phẩm
 CREATE OR REPLACE PROCEDURE add_product(
     p_product_name  IN VARCHAR2,
     p_category      IN VARCHAR2,
@@ -436,11 +451,16 @@ BEGIN
     p_message := 'Them san pham thanh cong!';
 EXCEPTION
     WHEN DUP_VAL_ON_INDEX THEN
-        p_message := 'L?i: Mã s?n ph?m dã t?n t?i.';
+        p_message := 'Lỗi: Mã sản phẩm đã tồn tại.';
     WHEN OTHERS THEN
-        p_message := 'L?i không xác d?nh: ' || SQLERRM;
+        p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
+
+
+
+
 
 
 -- Thêm don hàng
@@ -458,7 +478,7 @@ BEGIN
     WHERE customer_id = p_customer_id;
     
     IF v_count = 0 THEN
-        p_message := 'L?i: Mã khách hàng không t?n t?i.';
+        p_message := 'Lỗii: Mã khách hàng không tồn tại.';
         RETURN;
     END IF;
 
@@ -470,7 +490,7 @@ BEGIN
     p_message := 'Them hoa don thanh cong!';
 EXCEPTION
     WHEN OTHERS THEN
-        p_message := 'L?i không xác d?nh: ' || SQLERRM;
+        p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
 
