@@ -31,6 +31,11 @@ namespace MVC.router
                 pattern: "hoadon",
                 defaults: new { controller = "Order", action = "Index" });
 
+            endpoints.MapControllerRoute(
+                name: "dvthuchien_route",
+                pattern: "khachhang_thucung",
+                defaults: new { controller = "CustomerPet", action = "Index" });
+
         }
     }
 }
