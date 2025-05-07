@@ -28,6 +28,7 @@ public class ProductListViewModel : PaginationViewModel
 public class OrderListViewModel : PaginationViewModel
 {
     public List<Order> Orders { get; set; }
+    
 }
 
 

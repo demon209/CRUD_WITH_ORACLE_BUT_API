@@ -1,5 +1,6 @@
 using MVC.Models;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,7 +18,7 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, quantity, order_date, total_amount 
                              FROM orders 
                              ORDER BY order_id ASC";
 
@@ -38,7 +39,7 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, quantity, order_date, total_amount 
                              FROM orders 
                              WHERE TO_CHAR(order_date, 'YYYY-MM-DD') LIKE :keyword 
                              ORDER BY order_id ASC";
@@ -60,7 +61,7 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, quantity, order_date, total_amount 
                              FROM orders 
                              WHERE order_id = :id";
 
@@ -84,8 +85,14 @@ namespace MVC.Services
             cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = order.CustomerId;
             cmd.Parameters.Add("p_pet_id", OracleDbType.Int32).Value = order.PetId;
             cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = order.ProductId;
+            cmd.Parameters.Add("p_quantity", OracleDbType.Int32).Value = order.ProductQuantity;
             cmd.Parameters.Add("p_order_date", OracleDbType.Date).Value = order.OrderDate;
-            cmd.Parameters.Add("p_total_amount", OracleDbType.Decimal).Value = order.TotalAmount;
+
+            var totalAmountParam = new OracleParameter("p_total_amount", OracleDbType.Decimal)
+            {
+                Direction = ParameterDirection.Output
+            };
+            cmd.Parameters.Add(totalAmountParam);
 
             var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
             {
@@ -95,7 +102,10 @@ namespace MVC.Services
 
             cmd.ExecuteNonQuery();
 
-            return messageParam.Value.ToString();
+            // ✅ Cách xử lý OracleDecimal an toàn
+            order.TotalAmount = GetDecimalFromOracleParam(totalAmountParam);
+
+            return messageParam.Value?.ToString() ?? "Không có phản hồi từ thủ tục.";
         }
 
         public string UpdateOrder(Order order)
@@ -112,8 +122,14 @@ namespace MVC.Services
             cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = order.CustomerId;
             cmd.Parameters.Add("p_pet_id", OracleDbType.Int32).Value = order.PetId;
             cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = order.ProductId;
+            cmd.Parameters.Add("p_quantity", OracleDbType.Int32).Value = order.ProductQuantity;
             cmd.Parameters.Add("p_order_date", OracleDbType.Date).Value = order.OrderDate;
-            cmd.Parameters.Add("p_total_amount", OracleDbType.Decimal).Value = order.TotalAmount;
+
+            var totalAmountParam = new OracleParameter("p_total_amount", OracleDbType.Decimal)
+            {
+                Direction = ParameterDirection.Output
+            };
+            cmd.Parameters.Add(totalAmountParam);
 
             var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
             {
@@ -123,7 +139,10 @@ namespace MVC.Services
 
             cmd.ExecuteNonQuery();
 
-            return messageParam.Value.ToString();
+            // ✅ Cách xử lý OracleDecimal an toàn
+            order.TotalAmount = GetDecimalFromOracleParam(totalAmountParam);
+
+            return messageParam.Value?.ToString() ?? "Không có phản hồi từ thủ tục.";
         }
 
         public string DeleteOrder(int orderId)
@@ -140,8 +159,7 @@ namespace MVC.Services
             cmd.Parameters.Add("p_message", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
             cmd.ExecuteNonQuery();
-
-            return cmd.Parameters["p_message"].Value.ToString();
+            return cmd.Parameters["p_message"].Value?.ToString() ?? "Không có phản hồi từ thủ tục.";
         }
 
         private Order ReadOrder(OracleDataReader reader)
@@ -152,9 +170,21 @@ namespace MVC.Services
                 CustomerId = reader.GetInt32(1),
                 PetId = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
                 ProductId = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3),
-                OrderDate = reader.GetDateTime(4),
-                TotalAmount = reader.GetDecimal(5)
+                ProductQuantity = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4),
+                OrderDate = reader.GetDateTime(5),
+                TotalAmount = reader.IsDBNull(6) ? 0 : reader.GetDecimal(6)
             };
+        }
+
+        /// <summary>
+        /// Helper method để đọc OracleDecimal an toàn
+        /// </summary>
+        private decimal GetDecimalFromOracleParam(OracleParameter param)
+        {
+            if (param?.Value is OracleDecimal oracleDecimal && !oracleDecimal.IsNull)
+                return oracleDecimal.Value;
+
+            return 0; // hoặc return null nếu bạn dùng decimal? trong Order model
         }
     }
 }

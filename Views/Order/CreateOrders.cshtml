@@ -17,13 +17,13 @@
 }
 
 <form asp-action="CreateOrders" method="post" class="form">
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="CustomerId">Thông tin khách hàng</label>
-        <select asp-for="CustomerId" class="form-control pt-2 pb-2 mb-2" required id="CustomerId" style="width: 100%;">
+        <select asp-for="CustomerId" class="form-control form-control-lg mb-4" required id="CustomerId">
             <option value="">-- Vui lòng chọn --</option>
             @foreach (var customer in ViewBag.Customers)
             {
-                <option value="@customer.CustomerId">@customer.CustomerId - @customer.FirstName @customer.LastName</option>
+                <option value="@customer.CustomerId">@customer.CustomerId - @customer.FirstName @customer.LastName - @customer.PhoneNumber </option>
             }
         </select>
         <span asp-validation-for="CustomerId" class="text-danger"></span>
@@ -31,18 +31,12 @@
 
     <div class="form-group mb-3">
         <label for="OrderDate">Ngày đặt</label>
-        <input asp-for="OrderDate" class="form-control" type="date" required />
+        <input asp-for="OrderDate" class="form-control " type="date" required />
     </div>
 
-
-    <div class="form-group">
-        <label>Total Amount</label>
-        <input asp-for="TotalAmount" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label>PetId (nếu có)</label>
-        <select asp-for="PetId" class="form-control">
+    <div class="form-group mb-3">
+        <label>ID thú cưng (nếu có)</label>
+        <select asp-for="PetId" class="form-control form-control-lg mb-4" id="PetId">
             <option value="">-- Không chọn --</option>
             @foreach (var pet in ViewBag.Pets)
             {
@@ -51,9 +45,9 @@
         </select>
     </div>
 
-    <div class="form-group">
-        <label>ProductId (nếu có)</label>
-        <select asp-for="ProductId" class="form-control">
+    <div class="form-group mb-3">
+        <label>ID sản phẩm (nếu có)</label>
+        <select asp-for="ProductId" class="form-control form-control-lg mb-4" id="ProductId">
             <option value="">-- Không chọn --</option>
             @foreach (var product in ViewBag.Products)
             {
@@ -62,19 +56,26 @@
         </select>
     </div>
 
+    <div class="form-group mb-3">
+        <label for="ProductQuantity">Số lượng sản phẩm (nếu có)</label>
+        <input asp-for="ProductQuantity" class="form-control" type="number" min="1" id="ProductQuantity" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label>Tổng tiền</label>
+        <input asp-for="TotalAmount" class="form-control" readonly id="TotalAmount" />
+    </div>
+
     <br />
     <button type="submit" class="btn btn-primary">Thêm</button>
     <a href="/Hoadon" class="btn btn-success">Hủy</a>
 </form>
 
-
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-<!-- Khởi tạo Select2 -->
 @section Scripts {
-    <!-- CSS & JS của Select2 -->
+    <!-- Select2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
@@ -93,5 +94,28 @@
                 allowClear: true
             });
         });
+
+        const productPrices = @Html.Raw(Json.Serialize(ViewBag.ProductPrices));
+        const petPrices = @Html.Raw(Json.Serialize(ViewBag.PetPrices));
+
+        function calculateTotal() {
+            const petId = $('#PetId').val();
+            const productId = $('#ProductId').val();
+            const quantity = parseInt($('#ProductQuantity').val()) || 0;
+
+            let total = 0;
+
+            if (petId && petPrices[petId]) {
+                total += parseFloat(petPrices[petId]);
+            }
+
+            if (productId && productPrices[productId] && quantity > 0) {
+                total += parseFloat(productPrices[productId]) * quantity;
+            }
+
+            $('#TotalAmount').val(total.toFixed(2));
+        }
+
+        $(document).on('change keyup', '#PetId, #ProductId, #ProductQuantity', calculateTotal);
     </script>
 }

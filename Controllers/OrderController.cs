@@ -90,12 +90,21 @@ namespace MVC.Controllers
         [HttpGet("Order/CreateOrders")]
         public IActionResult CreateOrders()
         {
-            ViewBag.Pets = _petService.GetAllPets();
-            ViewBag.Products = _productService.GetAllProducts();
-            ViewBag.Customers = _customerService.GetAllCustomers();
+            var pets = _petService.GetAllPets();
+            var products = _productService.GetAllProducts();
+            var customers = _customerService.GetAllCustomers();
+            var availablePets = pets.Where(p => p.Status != "Đã bán").ToList();
+            ViewBag.Pets = availablePets;
+
+            ViewBag.Products = products;
+            ViewBag.Customers = customers;
+
+            ViewBag.ProductPrices = products.ToDictionary(p => p.ProductId.ToString(), p => p.ProductPrice);
+            ViewBag.PetPrices = pets.ToDictionary(p => p.PetId.ToString(), p => p.Price);
 
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateOrders(Order order)
         {

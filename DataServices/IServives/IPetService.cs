@@ -8,8 +8,8 @@ namespace MVC.Services
         List<Pet> GetAllPets();
         List<Pet> SearchPets(string keyword);
         Pet GetPetById(int id);
-        string AddPet(Pet pet);
-        string UpdatePet(Pet pet);
-        string DeletePet(int petid);
+        string AddPet(Pet pet, byte[] imageData);     // phải trùng
+        string UpdatePet(Pet pet, byte[]? imageData);  // phải trùng
+        string DeletePet(int id);
     }
 }

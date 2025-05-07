@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 using MVC.Services;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace MVC.Controllers
@@ -60,17 +62,29 @@ namespace MVC.Controllers
         public IActionResult CreatePets() => View();
 
         [HttpPost]
-        public IActionResult CreatePets(Pet pet)
+        public IActionResult CreatePets(Pet pet, IFormFile imageFile)
         {
             if (!ModelState.IsValid) return View(pet);
 
-            string message = _petService.AddPet(pet);
+            byte[] imageData = null;
+
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                using var ms = new MemoryStream();
+                imageFile.CopyTo(ms);
+                imageData = ms.ToArray();
+            }
+
+            // Call the service method to add the pet with the image
+            string message = _petService.AddPet(pet, imageData);
+
             if (message.Contains("Them thu cung thanh cong!"))
             {
                 TempData["Success"] = message;
                 return RedirectToAction("Index");
             }
 
+            // If there is an error, add it to ModelState
             ModelState.AddModelError("", message);
             return View(pet);
         }
@@ -97,15 +111,28 @@ namespace MVC.Controllers
             var pet = _petService.GetPetById(id);
             if (pet == null)
                 return NotFound();
+
             return View(pet);
         }
 
         [HttpPost]
-        public IActionResult EditPet(Pet pet, int page = 1)
+        public IActionResult EditPet(Pet pet, IFormFile? imageFile, int page = 1)
         {
-            if (!ModelState.IsValid) return View(pet);
+            if (!ModelState.IsValid)
+                return View(pet);
 
-            string message = _petService.UpdatePet(pet);
+            byte[]? imageData = null;
+
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                using var ms = new MemoryStream();
+                imageFile.CopyTo(ms);
+                imageData = ms.ToArray();
+            }
+
+            // Gọi phương thức cập nhật - truyền null nếu không có ảnh mới
+            string message = _petService.UpdatePet(pet, imageData);
+
             if (message.Contains("Cap nhat thong tin thu cung thanh cong!"))
             {
                 TempData["Success"] = message;
@@ -115,5 +142,7 @@ namespace MVC.Controllers
             ModelState.AddModelError("", message);
             return View(pet);
         }
+
+
     }
 }

@@ -6,6 +6,7 @@ namespace MVC.Models
         public required int CustomerId { get; set; }
         public int? PetId { get; set; }
         public int? ProductId { get; set; }
+        public int? ProductQuantity {get; set;}
         public required DateTime OrderDate { get; set; }
         public required decimal TotalAmount { get; set; }
 

@@ -2,7 +2,7 @@
 
 <h2>Sửa Thú Cưng Có id: @Model.PetId</h2>
 
-<form asp-action="EditPet" method="post">
+<form asp-action="EditPet" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="PetId" />
     <input type="hidden" name="page" value="@Context.Request.Query["page"]" />
 
@@ -18,8 +18,9 @@
     <input asp-for="Gender" class="form-control" />
     <label>Price</label>
     <input asp-for="Price" class="form-control" />
-    <label>Stock</label>
-    <input asp-for="Stock" class="form-control" />
-
+    
+    <label>Image</label>
+    <input type="file" name="imageFile" class="form-control" />
+    
     <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
 </form>
