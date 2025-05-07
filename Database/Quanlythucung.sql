@@ -71,9 +71,13 @@ CREATE SEQUENCE seq_orders START WITH 1 INCREMENT BY 1;
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
     customer_id INT,
+    pet_id INT null,
+    product_id INT null,
     order_date DATE,
     total_amount DECIMAL(10,2),
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (pet_id) REFERENCES pet(pet_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
 
 CREATE OR REPLACE TRIGGER trg_orders_id
@@ -88,11 +92,10 @@ END;
 CREATE TABLE customer_pet (
     customer_pet_id INT PRIMARY KEY,
     customer_id INT,
-    pet_id INT,
+    pet_name nvarchar2(300),
     purchase_date DATE,
     price_at_purchase DECIMAL(10,2), -- PRICE
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-    FOREIGN KEY (pet_id) REFERENCES pet(pet_id)
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
 CREATE SEQUENCE seq_customer_pet START WITH 1 INCREMENT BY 1;
 
@@ -120,11 +123,17 @@ END;
 
 
 
-/*DROP TABLE orders CASCADE CONSTRAINTS;
+DROP TABLE orders CASCADE CONSTRAINTS;
 DROP TABLE pet CASCADE CONSTRAINTS;
+DROP TABLE customer_pet CASCADE CONSTRAINTS;
 DROP TABLE customer CASCADE CONSTRAINTS;
-DROP TABLE product CASCADE CONSTRAINTS;*/
+DROP TABLE product CASCADE CONSTRAINTS;
 
+DROP SEQUENCE seq_product;
+DROP SEQUENCE seq_pet;
+DROP SEQUENCE seq_orders;
+DROP SEQUENCE seq_customer_pet;
+DROP SEQUENCE seq_customer;
 
 
 
@@ -263,39 +272,39 @@ COMMIT;
 
 
 
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES (2, TO_DATE('2025-04-24', 'YYYY-MM-DD'), 1200.50);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 2, TO_DATE('2025-04-24', 'YYYY-MM-DD'), 1200.50);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 3, TO_DATE('2025-04-23', 'YYYY-MM-DD'), 1500.75);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 4, TO_DATE('2025-04-22', 'YYYY-MM-DD'), 950.25);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 5, TO_DATE('2025-04-21', 'YYYY-MM-DD'), 1100.00);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 6, TO_DATE('2025-04-20', 'YYYY-MM-DD'), 2000.40);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 7, TO_DATE('2025-04-19', 'YYYY-MM-DD'), 1450.30);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 8, TO_DATE('2025-04-18', 'YYYY-MM-DD'), 1325.60);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 9, TO_DATE('2025-04-17', 'YYYY-MM-DD'), 890.75);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 10, TO_DATE('2025-04-16', 'YYYY-MM-DD'), 1675.80);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 11, TO_DATE('2025-04-15', 'YYYY-MM-DD'), 2005.25);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 12, TO_DATE('2025-04-14', 'YYYY-MM-DD'), 980.00);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 13, TO_DATE('2025-04-13', 'YYYY-MM-DD'), 1520.40);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 14, TO_DATE('2025-04-12', 'YYYY-MM-DD'), 1420.55);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 15, TO_DATE('2025-04-11', 'YYYY-MM-DD'), 1105.20);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 16, TO_DATE('2025-04-10', 'YYYY-MM-DD'), 1890.00);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 17, TO_DATE('2025-04-09', 'YYYY-MM-DD'), 1345.10);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 18, TO_DATE('2025-04-08', 'YYYY-MM-DD'), 1250.80);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 19, TO_DATE('2025-04-07', 'YYYY-MM-DD'), 1095.50);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 20, TO_DATE('2025-04-06', 'YYYY-MM-DD'), 1050.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (1, 2, 15, 27, TO_DATE('2025-04-24', 'YYYY-MM-DD'), 1200.50);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (2, 3, 8, 35, TO_DATE('2025-04-23', 'YYYY-MM-DD'), 1500.75);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (3, 4, 22, 13, TO_DATE('2025-04-22', 'YYYY-MM-DD'), 950.25);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (4, 5, 33, 41, TO_DATE('2025-04-21', 'YYYY-MM-DD'), 1100.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (5, 6, 19, 7, TO_DATE('2025-04-20', 'YYYY-MM-DD'), 2000.40);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (6, 7, 1, 49, TO_DATE('2025-04-19', 'YYYY-MM-DD'), 1450.30);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (7, 8, 26, 16, TO_DATE('2025-04-18', 'YYYY-MM-DD'), 1325.60);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (8, 9, 47, 2, TO_DATE('2025-04-17', 'YYYY-MM-DD'), 890.75);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (9, 10, 10, 25, TO_DATE('2025-04-16', 'YYYY-MM-DD'), 1675.80);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (10, 11, 36, 14, TO_DATE('2025-04-15', 'YYYY-MM-DD'), 2005.25);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (11, 12, 3, 38, TO_DATE('2025-04-14', 'YYYY-MM-DD'), 980.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (12, 13, 48, 22, TO_DATE('2025-04-13', 'YYYY-MM-DD'), 1520.40);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (13, 14, 6, 12, TO_DATE('2025-04-12', 'YYYY-MM-DD'), 1420.55);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (14, 15, 29, 30, TO_DATE('2025-04-11', 'YYYY-MM-DD'), 1105.20);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (15, 16, 18, 9, TO_DATE('2025-04-10', 'YYYY-MM-DD'), 1890.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (16, 17, 43, 5, TO_DATE('2025-04-09', 'YYYY-MM-DD'), 1345.10);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (17, 18, 40, 33, TO_DATE('2025-04-08', 'YYYY-MM-DD'), 1250.80);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (18, 19, 25, 18, TO_DATE('2025-04-07', 'YYYY-MM-DD'), 1095.50);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (19, 20, 12, 45, TO_DATE('2025-04-06', 'YYYY-MM-DD'), 1050.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (20, 21, 5, 10, TO_DATE('2025-04-05', 'YYYY-MM-DD'), 1115.40);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (21, 22, 32, 6, TO_DATE('2025-04-04', 'YYYY-MM-DD'), 1215.60);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (22, 23, 11, 39, TO_DATE('2025-04-03', 'YYYY-MM-DD'), 980.20);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (23, 24, 30, 17, TO_DATE('2025-04-02', 'YYYY-MM-DD'), 1150.30);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (24, 25, 44, 28, TO_DATE('2025-04-01', 'YYYY-MM-DD'), 1260.00);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (25, 26, 14, 4, TO_DATE('2025-03-31', 'YYYY-MM-DD'), 1340.25);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (26, 27, 35, 36, TO_DATE('2025-03-30', 'YYYY-MM-DD'), 1210.90);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (27, 28, 21, 8, TO_DATE('2025-03-29', 'YYYY-MM-DD'), 1455.10);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (28, 29, 9, 1, TO_DATE('2025-03-28', 'YYYY-MM-DD'), 1090.60);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (29, 30, 24, 50, TO_DATE('2025-03-27', 'YYYY-MM-DD'), 1300.75);
+INSERT INTO orders (order_id, customer_id, pet_id, product_id, order_date, total_amount) VALUES (30, 31, 17, 20, TO_DATE('2025-03-26', 'YYYY-MM-DD'), 1185.90);
 
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 21, TO_DATE('2025-04-05', 'YYYY-MM-DD'), 1115.40);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 22, TO_DATE('2025-04-04', 'YYYY-MM-DD'), 1215.60);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 23, TO_DATE('2025-04-03', 'YYYY-MM-DD'), 980.20);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 24, TO_DATE('2025-04-02', 'YYYY-MM-DD'), 1150.30);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 25, TO_DATE('2025-04-01', 'YYYY-MM-DD'), 1260.00);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 26, TO_DATE('2025-03-31', 'YYYY-MM-DD'), 1340.25);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 27, TO_DATE('2025-03-30', 'YYYY-MM-DD'), 1210.90);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 28, TO_DATE('2025-03-29', 'YYYY-MM-DD'), 1455.10);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 29, TO_DATE('2025-03-28', 'YYYY-MM-DD'), 1090.60);
-INSERT INTO orders (  customer_id, order_date, total_amount) VALUES ( 30, TO_DATE('2025-03-27', 'YYYY-MM-DD'), 1300.75);
+COMMIT;
 
-commit;
 
 
 
@@ -331,6 +340,37 @@ INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Poop Bag
 INSERT INTO product (product_name, category, price, stock) VALUES ('Cat House', 'Furniture', 28.00, 40);
 INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Training Pads', 'Accessories', 12.00, 100);
 commit;
+
+
+
+
+
+
+
+-------------------------------------------------------------------SELECT-----------------------------------------------------------------------------------
+
+SELECT a.customer_pet_id, a.customer_id,customer.first_name,customer.last_name, pet_name, a.purchase_date,
+       a.price_at_purchase
+  FROM customer_pet a join customer on a.customer_id=customer.customer_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -465,34 +505,52 @@ END;
 
 -- Thêm don hàng
 CREATE OR REPLACE PROCEDURE add_order(
-    p_customer_id IN INT,
-    p_order_date IN DATE,
-    p_total_amount IN DECIMAL,
-    p_message OUT VARCHAR2
+    p_customer_id   IN INT,
+    p_pet_id        IN INT,
+    p_product_id    IN INT,
+    p_order_date    IN DATE,
+    p_total_amount  IN DECIMAL,
+    p_message       OUT VARCHAR2
 ) IS
     v_count INT;
 BEGIN
-
-    SELECT COUNT(*) INTO v_count
-    FROM customer
-    WHERE customer_id = p_customer_id;
-    
+    -- Kiểm tra customer
+    SELECT COUNT(*) INTO v_count FROM customer WHERE customer_id = p_customer_id;
     IF v_count = 0 THEN
-        p_message := 'Lỗii: Mã khách hàng không tồn tại.';
+        p_message := 'Lỗi: Mã khách hàng không tồn tại.';
         RETURN;
     END IF;
 
+    -- Kiểm tra pet nếu có
+    IF p_pet_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO v_count FROM pet WHERE pet_id = p_pet_id;
+        IF v_count = 0 THEN
+            p_message := 'Lỗi: Mã thú cưng không tồn tại.';
+            RETURN;
+        END IF;
+    END IF;
 
-    INSERT INTO orders (customer_id, order_date, total_amount)
-    VALUES (p_customer_id, p_order_date, p_total_amount);
+    -- Kiểm tra product nếu có
+    IF p_product_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO v_count FROM product WHERE product_id = p_product_id;
+        IF v_count = 0 THEN
+            p_message := 'Lỗi: Mã sản phẩm không tồn tại.';
+            RETURN;
+        END IF;
+    END IF;
+
+    -- Thêm đơn hàng
+    INSERT INTO orders (customer_id, pet_id, product_id, order_date, total_amount)
+    VALUES (p_customer_id, p_pet_id, p_product_id, p_order_date, p_total_amount);
 
     COMMIT;
-    p_message := 'Them hoa don thanh cong!';
+    p_message := 'Thêm hóa đơn thành công!';
 EXCEPTION
     WHEN OTHERS THEN
         p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
 
 
 
@@ -604,43 +662,62 @@ END;
 
 
 CREATE OR REPLACE PROCEDURE update_order(
-    p_order_id       IN INT,
-    p_customer_id    IN INT,
-    p_order_date     IN DATE,
-    p_total_amount   IN DECIMAL,
-    p_message        OUT VARCHAR2
+    p_order_id      IN INT,
+    p_customer_id   IN INT,
+    p_pet_id        IN INT,
+    p_product_id    IN INT,
+    p_order_date    IN DATE,
+    p_total_amount  IN DECIMAL,
+    p_message       OUT VARCHAR2
 ) IS
     v_count INT;
 BEGIN
-
-    SELECT COUNT(*) INTO v_count
-    FROM customer
-    WHERE customer_id = p_customer_id;
-
+    -- Kiểm tra customer
+    SELECT COUNT(*) INTO v_count FROM customer WHERE customer_id = p_customer_id;
     IF v_count = 0 THEN
-        p_message := 'L?i: Mã khách hàng ' || p_customer_id || ' không t?n t?i.';
+        p_message := 'Lỗi: Mã khách hàng không tồn tại.';
         RETURN;
     END IF;
 
+    -- Kiểm tra pet nếu có
+    IF p_pet_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO v_count FROM pet WHERE pet_id = p_pet_id;
+        IF v_count = 0 THEN
+            p_message := 'Lỗi: Mã thú cưng không tồn tại.';
+            RETURN;
+        END IF;
+    END IF;
 
+    -- Kiểm tra product nếu có
+    IF p_product_id IS NOT NULL THEN
+        SELECT COUNT(*) INTO v_count FROM product WHERE product_id = p_product_id;
+        IF v_count = 0 THEN
+            p_message := 'Lỗi: Mã sản phẩm không tồn tại.';
+            RETURN;
+        END IF;
+    END IF;
+
+    -- Cập nhật đơn hàng
     UPDATE orders
-    SET customer_id = p_customer_id,
-        order_date = p_order_date,
+    SET customer_id  = p_customer_id,
+        pet_id       = p_pet_id,
+        product_id   = p_product_id,
+        order_date   = p_order_date,
         total_amount = p_total_amount
     WHERE order_id = p_order_id;
 
     IF SQL%ROWCOUNT = 0 THEN
-        p_message := 'L?i: Không tìm th?y don hàng v?i mã ID ' || p_order_id;
+        p_message := 'Lỗi: Không tìm thấy đơn hàng với ID ' || p_order_id;
     ELSE
         COMMIT;
-        p_message := 'Cap nhat don hang thanh cong!';
+        p_message := 'Cập nhật đơn hàng thành công!';
     END IF;
-
 EXCEPTION
     WHEN OTHERS THEN
-        p_message := 'L?i không xác d?nh: ' || SQLERRM;
+        p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
 
 
 
@@ -733,3 +810,7 @@ EXCEPTION
         p_message := 'L?i không xác d?nh: ' || SQLERRM;
 END;
 /
+
+
+
+
