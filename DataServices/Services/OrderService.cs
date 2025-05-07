@@ -17,7 +17,9 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = "SELECT order_id, customer_id, order_date, total_amount FROM orders ORDER BY order_id ASC";
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
+                             FROM orders 
+                             ORDER BY order_id ASC";
 
             using var cmd = new OracleCommand(query, conn);
             using var reader = cmd.ExecuteReader();
@@ -36,7 +38,7 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = @"SELECT order_id, customer_id, order_date, total_amount 
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
                              FROM orders 
                              WHERE TO_CHAR(order_date, 'YYYY-MM-DD') LIKE :keyword 
                              ORDER BY order_id ASC";
@@ -58,23 +60,14 @@ namespace MVC.Services
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            string query = "SELECT order_id, customer_id, order_date, total_amount FROM orders WHERE order_id = :id";
+            string query = @"SELECT order_id, customer_id, pet_id, product_id, order_date, total_amount 
+                             FROM orders 
+                             WHERE order_id = :id";
 
             using var cmd = new OracleCommand(query, conn);
             cmd.Parameters.Add(new OracleParameter("id", id));
 
             using var reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                return new Order
-                {
-                    OrderId = reader.GetInt32(0),
-                    CustomerId = reader.GetInt32(1),
-                    OrderDate = reader.GetDateTime(2),
-                    TotalAmount = reader.GetDecimal(3)
-                };
-            }
-
             return reader.Read() ? ReadOrder(reader) : null;
         }
 
@@ -89,6 +82,8 @@ namespace MVC.Services
             };
 
             cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = order.CustomerId;
+            cmd.Parameters.Add("p_pet_id", OracleDbType.Int32).Value = order.PetId;
+            cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = order.ProductId;
             cmd.Parameters.Add("p_order_date", OracleDbType.Date).Value = order.OrderDate;
             cmd.Parameters.Add("p_total_amount", OracleDbType.Decimal).Value = order.TotalAmount;
 
@@ -115,6 +110,8 @@ namespace MVC.Services
 
             cmd.Parameters.Add("p_order_id", OracleDbType.Int32).Value = order.OrderId;
             cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = order.CustomerId;
+            cmd.Parameters.Add("p_pet_id", OracleDbType.Int32).Value = order.PetId;
+            cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = order.ProductId;
             cmd.Parameters.Add("p_order_date", OracleDbType.Date).Value = order.OrderDate;
             cmd.Parameters.Add("p_total_amount", OracleDbType.Decimal).Value = order.TotalAmount;
 
@@ -146,14 +143,17 @@ namespace MVC.Services
 
             return cmd.Parameters["p_message"].Value.ToString();
         }
+
         private Order ReadOrder(OracleDataReader reader)
         {
             return new Order
             {
                 OrderId = reader.GetInt32(0),
                 CustomerId = reader.GetInt32(1),
-                OrderDate = reader.GetDateTime(2),
-                TotalAmount = reader.GetDecimal(3)
+                PetId = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
+                ProductId = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3),
+                OrderDate = reader.GetDateTime(4),
+                TotalAmount = reader.GetDecimal(5)
             };
         }
     }
