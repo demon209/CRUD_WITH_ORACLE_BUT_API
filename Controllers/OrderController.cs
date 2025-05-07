@@ -10,11 +10,17 @@ namespace MVC.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
-
-        public OrderController(IOrderService orderService)
+        private readonly IPetService _petService;
+        private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
+        public OrderController(IOrderService orderService, IPetService petService, IProductService productService, ICustomerService customerService)
         {
             _orderService = orderService;
+            _petService = petService;
+            _productService = productService;
+            _customerService = customerService;
         }
+
 
         [HttpGet]
         public IActionResult GetOrders()
@@ -84,25 +90,37 @@ namespace MVC.Controllers
         [HttpGet("Order/CreateOrders")]
         public IActionResult CreateOrders()
         {
+            ViewBag.Pets = _petService.GetAllPets();
+            ViewBag.Products = _productService.GetAllProducts();
+            ViewBag.Customers = _customerService.GetAllCustomers();
+
             return View();
         }
-
         [HttpPost]
         public IActionResult CreateOrders(Order order)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Pets = _petService.GetAllPets();
+                ViewBag.Products = _productService.GetAllProducts();
                 return View(order);
+            }
 
             var message = _orderService.AddOrder(order);
-            if (message.Contains("Them hoa don thanh cong!"))
+            if (message.Contains("Thêm hóa đơn thành công!"))
             {
                 TempData["Success"] = message;
                 return RedirectToAction("Index");
             }
 
+            // Nếu thêm thất bại, cũng cần gán lại ViewBag
+            ViewBag.Pets = _petService.GetAllPets();
+            ViewBag.Products = _productService.GetAllProducts();
+            ViewBag.Customers = _customerService.GetAllCustomers();
             ModelState.AddModelError("", message);
             return View(order);
         }
+
 
         [HttpPost]
         public IActionResult DeleteOrder(int id, int page = 1)
