@@ -35,7 +35,8 @@
                         <td>
                             @if (!string.IsNullOrEmpty(pet.ImageBase64))
                             {
-                                <img src="@pet.ImageBase64" alt="Ảnh thú cưng" width="80" height="80" style="object-fit:cover; border-radius:8px;" />
+                                <img src="@pet.ImageBase64" alt="Ảnh thú cưng" width="80" height="80"
+                                    style="object-fit:cover; border-radius:8px;" />
                             }
                             else
                             {
@@ -74,12 +75,7 @@
                                 }
                                 else
                                 {
-                                                                        <form asp-action="DeletePet" asp-controller="Pet" method="post"
-                                        onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
-                                        <input type="hidden" name="id" value="@pet.PetId" />
-                                        <input type="hidden" name="page" value="@Model.CurrentPage" />
-                                        <button type="submit" class="btn btn-danger btn-sm">😾 Xóa</button>
-                                    </form>
+                                    <p class="text-muted ">Muted</p>
                                 }
                             </div>
                         </td>

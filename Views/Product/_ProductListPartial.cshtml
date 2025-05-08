@@ -9,7 +9,7 @@
                 <th>Tên sản phẩm</th>
                 <th>Loại</th>
                 <th>Giá</th>
-                <th>Số lượng</th>
+                <th>Số lượng trong kho</th>
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -30,7 +30,8 @@
                         <td>@product.ProductName</td>
                         <td>@product.ProductCategory</td>
                         <td>@product.ProductPrice</td>
-                        <td>@product.ProductStock</td>
+                        <td>@(product.ProductStock == 0 ? "Hết hàng" : product.ProductStock.ToString())</td>
+
                         <td>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
                                 <form asp-action="DeleteProduct" asp-controller="Product" method="post"

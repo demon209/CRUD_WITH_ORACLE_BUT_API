@@ -4,6 +4,13 @@
 
 <input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên thú cưng..." />
 
+<div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
+    <label class="form-check-label" for="onlyAvailableCheckbox">
+        Chỉ hiện thú cưng chưa bán
+    </label>
+</div>
+
 <div id="petListContainer">
     @await Html.PartialAsync("_PetListPartial.cshtml", Model)
 </div>
@@ -13,9 +20,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function loadPets(keyword = "", page = 1) {
+            const onlyAvailable = $('#onlyAvailableCheckbox').is(':checked');
             $.ajax({
                 url: '/Pet/LoadPetsPartial',
-                data: { keyword: keyword, page: page },
+                data: { keyword: keyword, page: page, onlyAvailable: onlyAvailable },
                 success: function (data) {
                     $('#petListContainer').html(data);
                 }
@@ -24,31 +32,31 @@
 
         $(document).ready(function () {
             $('#searchBox').on('input', function () {
-                const keyword = $(this).val();
-                loadPets(keyword, 1); // reset về trang 1 khi tìm
+                loadPets($(this).val(), 1);
             });
 
-            // Sự kiện click phân trang
+            $('#onlyAvailableCheckbox').on('change', function () {
+                loadPets($('#searchBox').val(), 1);
+            });
+
             $(document).on('click', '.page-link', function (e) {
                 e.preventDefault();
                 const page = $(this).data('page');
-                const keyword = $('#searchBox').val();
-                loadPets(keyword, page);
+                loadPets($('#searchBox').val(), page);
             });
 
-            // SweetAlert nếu có TempData
             @if (TempData["Success"] != null)
-            {
-                <text>
-                    Swal.fire({
-                        icon: 'success',
+                {
+                    <text>
+                        Swal.fire({
+                            icon: 'success',
                         title: 'Thành công!',
                         text: '@TempData["Success"]',
                         confirmButtonText: 'OK'
                     });
-                </text>
+                    </text>
             }
-        });
+    });
+
     </script>
 }
-

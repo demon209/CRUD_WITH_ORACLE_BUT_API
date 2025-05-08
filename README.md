@@ -55,5 +55,16 @@ Có file .env.example, bạn nên tạo file .env dựa trên đó.
 .NET SDK 6.0 trở lên
 Git
 
-![image](https://github.com/user-attachments/assets/76291e0d-19ea-4bab-82b1-2c27666583dd)
+***Content:***
 
+![alt text](image.png)
+
+***Database content:***
+
+![alt text](image-1.png)
+
+***More Information:***
+
+![alt text](image-2.png)
+
+***Updating...***

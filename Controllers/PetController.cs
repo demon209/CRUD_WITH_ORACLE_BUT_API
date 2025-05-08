@@ -40,23 +40,38 @@ namespace MVC.Controllers
             return View(model);
         }
 
-        [HttpGet("/Pet/LoadPetsPartial")]
-        public IActionResult LoadPetsPartial(string keyword = "", int page = 1, int pageSize = 5)
+        [HttpGet]
+        public IActionResult LoadPetsPartial(string keyword = "", int page = 1, int pageSize = 5, bool onlyAvailable = false)
         {
-            var pets = _petService.SearchPets(keyword);
-            int countPages = (int)Math.Ceiling(pets.Count / (double)pageSize);
-            var petsOnPage = pets.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            var model = new PetListViewModel
+            try
             {
-                Pets = petsOnPage,
-                CurrentPage = page,
-                CountPages = countPages,
-                GenerateUrl = p => Url.Action("LoadPetsPartial", new { keyword, page = p })!
-            };
+                var filteredPets = _petService.SearchPets(keyword);
 
-            return PartialView("~/Views/Pet/_PetListPartial.cshtml", model);
+                if (onlyAvailable)
+                {
+                    filteredPets = filteredPets.Where(p => p.Status != "Đã bán").ToList();
+                }
+
+                int totalItems = filteredPets.Count;
+                int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+                var petsOnPage = filteredPets.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                var model = new PetListViewModel
+                {
+                    Pets = petsOnPage,
+                    CurrentPage = page,
+                    CountPages = countPages,
+                    GenerateUrl = p => Url.Action("LoadPetsPartial", new { keyword = keyword, page = p, onlyAvailable = onlyAvailable })!
+                };
+
+                return PartialView("~/Views/Pet/_PetListPartial.cshtml", model);
+            }
+            catch (Exception ex)
+            {
+                return Content("Lỗi: " + ex.Message);
+            }
         }
+
 
         [HttpGet]
         public IActionResult CreatePets() => View();

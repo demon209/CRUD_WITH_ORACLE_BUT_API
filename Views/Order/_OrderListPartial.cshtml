@@ -9,8 +9,8 @@
                 <th>CustomerId</th>
                 <th>Order Date</th>
                 <th>Total Amount</th>
-                <th>Pet ID</th> <!-- Hiển thị Pet ID -->
-                <th>Product ID</th> <!-- Hiển thị Product ID -->
+                <th>Pet ID</th> 
+                <th>Product ID</th> 
                 <th>Hành động</th>
             </tr>
         </thead>
@@ -44,6 +44,8 @@
 
                                 <a asp-action="EditOrder" asp-route-id="@order.OrderId" asp-route-page="@Model.CurrentPage"
                                     class="btn btn-warning">👨‍🔧 Sửa</a>
+                                <a asp-action="OrderDetail" asp-route-id="@order.OrderId" class="btn btn-info">🔍 Chi tiết</a>
+
                             </div>
                         </td>
                     </tr>
