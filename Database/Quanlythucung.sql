@@ -11,10 +11,12 @@ CREATE TABLE pet (
     pet_type VARCHAR2(50),
     breed VARCHAR2(50),
     age INT,
-    gender VARCHAR2(10),
+    gender VARCHAR2(50),
     price DECIMAL(10,2),
-    stock INT
+    status NVARCHAR2(200) DEFAULT 'Còn thú cưng',
+    image blob NULL
 );
+
 
 -- create trigger
 CREATE OR REPLACE TRIGGER trg_pet_id
@@ -79,6 +81,7 @@ CREATE TABLE orders (
     FOREIGN KEY (pet_id) REFERENCES pet(pet_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
+ALTER TABLE orders ADD quantity INT null;
 
 CREATE OR REPLACE TRIGGER trg_orders_id
 BEFORE INSERT ON orders
@@ -142,89 +145,89 @@ DROP SEQUENCE seq_customer;
 
 
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Bobby', 'Chó', 'Poodle', 2, 'Đực', 4500000, 5);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price) VALUES
+('Bobby', 'Chó', 'Poodle', 2, 'Đực', 4500000);
 
-INSERT INTO pet (pet_name,  pet_type, breed, age, gender, price, stock) VALUES
-('Mimi', 'Mèo', 'Mèo Anh Lông Ngắn', 1, 'Cái', 3000000, 3);
+INSERT INTO pet (pet_name,  pet_type, breed, age, gender, price ) VALUES
+('Mimi', 'Mèo', 'Mèo Anh Lông Ngắn', 1, 'Cái', 3000000);
 
-INSERT INTO pet (pet_name,  pet_type, breed, age, gender, price, stock) VALUES
-('Whiskers', 'Mèo', 'Mèo Ba Tư', 2, 'Đực', 5000000, 4);
+INSERT INTO pet (pet_name,  pet_type, breed, age, gender, price ) VALUES
+('Whiskers', 'Mèo', 'Mèo Ba Tư', 2, 'Đực', 5000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Rex', 'Chó', 'Golden Retriever', 3, 'Đực', 6000000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Rex', 'Chó', 'Golden Retriever', 3, 'Đực', 6000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Luna', 'Mèo', 'Mèo Xiêm', 2, 'Cái', 3500000, 6);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Luna', 'Mèo', 'Mèo Xiêm', 2, 'Cái', 3500000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Rocky', 'Chó', 'Bulldog', 4, 'Đực', 7000000, 3);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Rocky', 'Chó', 'Bulldog', 4, 'Đực', 7000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Coco', 'Chó', 'Chihuahua', 1, 'Cái', 3200000, 4);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Coco', 'Chó', 'Chihuahua', 1, 'Cái', 3200000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Snowy', 'Mèo', 'Mèo Ragdoll', 2, 'Cái', 5500000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Snowy', 'Mèo', 'Mèo Ragdoll', 2, 'Cái', 5500000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Max', 'Chó', 'Labrador', 3, 'Đực', 5800000, 3);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Max', 'Chó', 'Labrador', 3, 'Đực', 5800000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Kitty', 'Mèo', 'Mèo Munchkin', 1, 'Cái', 4000000, 5);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Kitty', 'Mèo', 'Mèo Munchkin', 1, 'Cái', 4000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Benji', 'Chó', 'Pug', 2, 'Đực', 3800000, 6);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Benji', 'Chó', 'Pug', 2, 'Đực', 3800000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Simba', 'Mèo', 'Mèo Maine Coon', 4, 'Đực', 6200000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Simba', 'Mèo', 'Mèo Maine Coon', 4, 'Đực', 6200000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Daisy', 'Chó', 'Cocker Spaniel', 3, 'Cái', 4700000, 3);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Daisy', 'Chó', 'Cocker Spaniel', 3, 'Cái', 4700000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Leo', 'Chó', 'Shih Tzu', 2, 'Đực', 3500000, 4);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Leo', 'Chó', 'Shih Tzu', 2, 'Đực', 3500000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Chloe', 'Mèo', 'Mèo Anh Lông Dài', 3, 'Cái', 5200000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Chloe', 'Mèo', 'Mèo Anh Lông Dài', 3, 'Cái', 5200000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Oscar', 'Chó', 'Samoyed', 1, 'Đực', 8000000, 1);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Oscar', 'Chó', 'Samoyed', 1, 'Đực', 8000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Bella', 'Mèo', 'Mèo Scottish Fold', 2, 'Cái', 4800000, 3);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Bella', 'Mèo', 'Mèo Scottish Fold', 2, 'Cái', 4800000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Teddy', 'Chó', 'Bichon Frise', 1, 'Đực', 4200000, 4);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Teddy', 'Chó', 'Bichon Frise', 1, 'Đực', 4200000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Lily', 'Mèo', 'Mèo Sphynx', 2, 'Cái', 7500000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Lily', 'Mèo', 'Mèo Sphynx', 2, 'Cái', 7500000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Bruno', 'Chó', 'Doberman', 3, 'Đực', 9000000, 1);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Bruno', 'Chó', 'Doberman', 3, 'Đực', 9000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Angel', 'Mèo', 'Mèo Bengal', 1, 'Cái', 6700000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Angel', 'Mèo', 'Mèo Bengal', 1, 'Cái', 6700000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Shadow', 'Chó', 'Husky', 2, 'Đực', 7500000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Shadow', 'Chó', 'Husky', 2, 'Đực', 7500000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Ruby', 'Mèo', 'Mèo Mỹ Tai Cụp', 3, 'Cái', 5300000, 1);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Ruby', 'Mèo', 'Mèo Mỹ Tai Cụp', 3, 'Cái', 5300000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Zorro', 'Chó', 'Beagle', 2, 'Đực', 3900000, 3);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Zorro', 'Chó', 'Beagle', 2, 'Đực', 3900000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Lola', 'Mèo', 'Mèo Himalaya', 2, 'Cái', 5600000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Lola', 'Mèo', 'Mèo Himalaya', 2, 'Cái', 5600000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Thor', 'Chó', 'Rottweiler', 3, 'Đực', 8200000, 1);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Thor', 'Chó', 'Rottweiler', 3, 'Đực', 8200000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Zoe', 'Mèo', 'Mèo Somali', 2, 'Cái', 6000000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Zoe', 'Mèo', 'Mèo Somali', 2, 'Cái', 6000000);
 
-INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock) VALUES
-('Spike', 'Chó', 'Chó Phú Quốc', 4, 'Đực', 5000000, 2);
+INSERT INTO pet (pet_name, pet_type, breed, age, gender, price ) VALUES
+('Spike', 'Chó', 'Chó Phú Quốc', 4, 'Đực', 5000000);
 
 
 COMMIT;
@@ -308,37 +311,37 @@ COMMIT;
 
 
 
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Food', 'Food', 15.99, 100);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Toy', 'Toys', 9.99, 150);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Cat Collar', 'Accessories', 5.50, 80);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Bird Cage', 'Cages', 50.00, 30);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Fish Tank', 'Aquarium', 120.00, 25);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Leash', 'Accessories', 7.99, 100);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Cat Litter', 'Litter', 20.00, 200);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Shampoo', 'Grooming', 8.99, 120);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Bed', 'Furniture', 30.00, 60);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Fish Food', 'Food', 12.50, 180);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Hamster Wheel', 'Toys', 5.99, 200);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Reptile Heat Lamp', 'Reptile', 25.00, 50);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Bowl', 'Accessories', 3.50, 200);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Carrier', 'Accessories', 45.00, 75);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Bird Food', 'Food', 10.00, 150);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Cat Scratching Post', 'Furniture', 22.50, 85);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Rabbit Hutch', 'Cages', 60.00, 40);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Sweater', 'Clothing', 15.00, 100);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Brush', 'Grooming', 6.00, 200);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Teeth Cleaner', 'Health', 8.50, 90);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Boots', 'Clothing', 12.00, 70);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Fish Filter', 'Aquarium', 35.00, 50);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Hamster Cage', 'Cages', 40.00, 60);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Muzzle', 'Accessories', 9.00, 100);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Cat Toy', 'Toys', 4.00, 150);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Medicine', 'Health', 20.00, 75);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Bird Cage Stand', 'Cages', 30.00, 30);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Reptile Water Dish', 'Reptile', 10.00, 80);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Pet Poop Bags', 'Accessories', 2.99, 250);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Cat House', 'Furniture', 28.00, 40);
-INSERT INTO product (product_name, category, price, stock) VALUES ('Dog Training Pads', 'Accessories', 12.00, 100);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Food', 'Food', 15.99, 100);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Toy', 'Toys', 9.99, 150);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Collar', 'Accessories', 5.50, 80);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Cage', 'Cages', 50.00, 30);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Tank', 'Aquarium', 120.00, 25);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Leash', 'Accessories', 7.99, 100);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Litter', 'Litter', 20.00, 200);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Shampoo', 'Grooming', 8.99, 120);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Bed', 'Furniture', 30.00, 60);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Food', 'Food', 12.50, 180);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Hamster Wheel', 'Toys', 5.99, 200);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Reptile Heat Lamp', 'Reptile', 25.00, 50);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Bowl', 'Accessories', 3.50, 200);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Carrier', 'Accessories', 45.00, 75);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Food', 'Food', 10.00, 150);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Scratching Post', 'Furniture', 22.50, 85);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Rabbit Hutch', 'Cages', 60.00, 40);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Sweater', 'Clothing', 15.00, 100);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Brush', 'Grooming', 6.00, 200);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Teeth Cleaner', 'Health', 8.50, 90);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Boots', 'Clothing', 12.00, 70);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Filter', 'Aquarium', 35.00, 50);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Hamster Cage', 'Cages', 40.00, 60);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Muzzle', 'Accessories', 9.00, 100);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Toy', 'Toys', 4.00, 150);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Medicine', 'Health', 20.00, 75);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Cage Stand', 'Cages', 30.00, 30);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Reptile Water Dish', 'Reptile', 10.00, 80);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Poop Bags', 'Accessories', 2.99, 250);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat House', 'Furniture', 28.00, 40);
+INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Training Pads', 'Accessories', 12.00, 100);
 commit;
 
 
@@ -355,7 +358,9 @@ SELECT a.customer_pet_id, a.customer_id,customer.first_name,customer.last_name, 
 
 
 
-
+SELECT a.pet_id, a.pet_name, a.pet_type, a.breed, a.age, a.gender,
+       a.price, a.status, a.image
+  FROM pet a;
 
 
 
@@ -394,14 +399,13 @@ CREATE OR REPLACE PROCEDURE add_pet (
     p_age IN INT,
     p_gender IN VARCHAR2,
     p_price IN DECIMAL,
-    p_stock IN INT,
+    p_image IN BLOB,  -- Thêm tham số cho ảnh
     p_message OUT VARCHAR2
 ) IS
 BEGIN
-
-    INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, stock)
-    VALUES (p_pet_name, p_pet_type, p_breed, p_age, p_gender, p_price, p_stock);
-    
+    -- Chèn dữ liệu vào bảng pet, bao gồm ảnh (kiểu dữ liệu BLOB)
+    INSERT INTO pet (pet_name, pet_type, breed, age, gender, price, status, image)
+    VALUES (p_pet_name, p_pet_type, p_breed, p_age, p_gender, p_price,'Còn thú cưng', p_image);
 
     p_message := 'Them thu cung thanh cong!';
 
@@ -410,6 +414,7 @@ EXCEPTION
         p_message := 'ERROR: ' || SQLERRM;
 END;
 /
+
 
 
 --Thêm khách hàng
@@ -484,7 +489,7 @@ CREATE OR REPLACE PROCEDURE add_product(
     p_message       OUT VARCHAR2
 ) IS
 BEGIN
-    INSERT INTO product (product_name, category, price, stock)
+    INSERT INTO product (product_name, category, price, stock )
     VALUES (p_product_name, p_category, p_price, p_stock);
     
     COMMIT;
@@ -508,11 +513,15 @@ CREATE OR REPLACE PROCEDURE add_order(
     p_customer_id   IN INT,
     p_pet_id        IN INT,
     p_product_id    IN INT,
+    p_quantity      IN INT,
     p_order_date    IN DATE,
-    p_total_amount  IN DECIMAL,
+    p_total_amount  OUT DECIMAL,
     p_message       OUT VARCHAR2
 ) IS
-    v_count INT;
+    v_count      INT;
+    v_pet_price  DECIMAL(10,2) := 0;
+    v_pro_price  DECIMAL(10,2) := 0;
+    v_stock      INT := 0;
 BEGIN
     -- Kiểm tra customer
     SELECT COUNT(*) INTO v_count FROM customer WHERE customer_id = p_customer_id;
@@ -521,32 +530,55 @@ BEGIN
         RETURN;
     END IF;
 
-    -- Kiểm tra pet nếu có
+    -- Xử lý pet nếu có
     IF p_pet_id IS NOT NULL THEN
-        SELECT COUNT(*) INTO v_count FROM pet WHERE pet_id = p_pet_id;
+        SELECT COUNT(*), NVL(MAX(price), 0) INTO v_count, v_pet_price FROM pet WHERE pet_id = p_pet_id;
         IF v_count = 0 THEN
             p_message := 'Lỗi: Mã thú cưng không tồn tại.';
             RETURN;
         END IF;
+
+        -- Cập nhật trạng thái thú cưng thành "Đã bán"
+        UPDATE pet SET status = 'Đã bán' WHERE pet_id = p_pet_id;
     END IF;
 
-    -- Kiểm tra product nếu có
+    -- Xử lý sản phẩm nếu có
     IF p_product_id IS NOT NULL THEN
-        SELECT COUNT(*) INTO v_count FROM product WHERE product_id = p_product_id;
+        SELECT COUNT(*), NVL(MAX(price), 0), NVL(MAX(stock), 0) 
+        INTO v_count, v_pro_price, v_stock 
+        FROM product WHERE product_id = p_product_id;
+
         IF v_count = 0 THEN
             p_message := 'Lỗi: Mã sản phẩm không tồn tại.';
             RETURN;
         END IF;
+
+        IF p_quantity IS NULL OR p_quantity <= 0 THEN
+            p_message := 'Lỗi: Số lượng sản phẩm không hợp lệ.';
+            RETURN;
+        END IF;
+
+        IF p_quantity > v_stock THEN
+            p_message := 'Lỗi: Sản phẩm không đủ hàng trong kho.';
+            RETURN;
+        END IF;
+
+        -- Trừ tồn kho
+        UPDATE product SET stock = stock - p_quantity WHERE product_id = p_product_id;
     END IF;
 
+    -- Tính tổng tiền
+    p_total_amount := v_pet_price + (v_pro_price * NVL(p_quantity, 0));
+
     -- Thêm đơn hàng
-    INSERT INTO orders (customer_id, pet_id, product_id, order_date, total_amount)
-    VALUES (p_customer_id, p_pet_id, p_product_id, p_order_date, p_total_amount);
+    INSERT INTO orders (customer_id, pet_id, product_id, quantity, order_date, total_amount)
+    VALUES (p_customer_id, p_pet_id, p_product_id, p_quantity, p_order_date, p_total_amount);
 
     COMMIT;
-    p_message := 'Thêm hóa đơn thành công!';
+    p_message := 'Them don hang thanh cong!';
 EXCEPTION
     WHEN OTHERS THEN
+        ROLLBACK;
         p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
@@ -555,7 +587,7 @@ END;
 
 
 
--- S?a thông tin thú cung
+
 CREATE OR REPLACE PROCEDURE update_pet(
     p_pet_id IN INT,
     p_pet_name IN VARCHAR2,
@@ -564,11 +596,12 @@ CREATE OR REPLACE PROCEDURE update_pet(
     p_age IN INT,
     p_gender IN VARCHAR2,
     p_price IN DECIMAL,
-    p_stock IN INT,
-    p_message OUT VARCHAR2  
+    p_status in nvarchar2,
+    p_image IN BLOB,  -- Thêm tham số ảnh
+    p_message OUT VARCHAR2
 ) IS
 BEGIN
-
+    -- Cập nhật thông tin thú cưng (các trường khác ngoài ảnh)
     UPDATE pet
     SET pet_name = p_pet_name,
         pet_type = p_pet_type,
@@ -576,23 +609,25 @@ BEGIN
         age = p_age,
         gender = p_gender,
         price = p_price,
-        stock = p_stock
+        status = 'Còn thú cưng',
+        -- Cập nhật ảnh nếu có, nếu không thì giữ ảnh cũ
+        image = COALESCE(p_image, image)
     WHERE pet_id = p_pet_id;
-
 
     IF SQL%ROWCOUNT > 0 THEN
         p_message := 'Cap nhat thong tin thu cung thanh cong!';
     ELSE
-        p_message := 'L?i: Không tìm th?y thú cung v?i mã ID ' || p_pet_id;
+        p_message := 'Lỗi: Không tìm thấy thú cưng với mã ID ' || p_pet_id;
     END IF;
 
     COMMIT;
 EXCEPTION
     WHEN OTHERS THEN
-        p_message := 'L?i không xác d?nh: ' || SQLERRM;
-        ROLLBACK; 
+        p_message := 'Lỗi không xác định: ' || SQLERRM;
+        ROLLBACK;
 END;
 /
+
 
 
 -- S?a thông tin khách hàng
@@ -666,11 +701,17 @@ CREATE OR REPLACE PROCEDURE update_order(
     p_customer_id   IN INT,
     p_pet_id        IN INT,
     p_product_id    IN INT,
+    p_quantity      IN INT,
     p_order_date    IN DATE,
-    p_total_amount  IN DECIMAL,
+    p_total_amount  OUT DECIMAL,
     p_message       OUT VARCHAR2
 ) IS
-    v_count INT;
+    v_count       INT;
+    v_pet_price   DECIMAL(10,2) := 0;
+    v_pro_price   DECIMAL(10,2) := 0;
+    v_old_qty     INT := 0;
+    v_stock       INT := 0;
+    v_old_pet_id  INT;
 BEGIN
     -- Kiểm tra customer
     SELECT COUNT(*) INTO v_count FROM customer WHERE customer_id = p_customer_id;
@@ -679,22 +720,60 @@ BEGIN
         RETURN;
     END IF;
 
-    -- Kiểm tra pet nếu có
+    -- Xử lý pet nếu có
     IF p_pet_id IS NOT NULL THEN
-        SELECT COUNT(*) INTO v_count FROM pet WHERE pet_id = p_pet_id;
+        SELECT COUNT(*), NVL(MAX(price), 0) INTO v_count, v_pet_price FROM pet WHERE pet_id = p_pet_id;
         IF v_count = 0 THEN
             p_message := 'Lỗi: Mã thú cưng không tồn tại.';
             RETURN;
         END IF;
     END IF;
 
-    -- Kiểm tra product nếu có
+    -- Xử lý sản phẩm nếu có
     IF p_product_id IS NOT NULL THEN
-        SELECT COUNT(*) INTO v_count FROM product WHERE product_id = p_product_id;
+        SELECT COUNT(*), NVL(MAX(price), 0), NVL(MAX(stock), 0) 
+        INTO v_count, v_pro_price, v_stock 
+        FROM product WHERE product_id = p_product_id;
+
         IF v_count = 0 THEN
             p_message := 'Lỗi: Mã sản phẩm không tồn tại.';
             RETURN;
         END IF;
+
+        IF p_quantity IS NULL OR p_quantity <= 0 THEN
+            p_message := 'Lỗi: Số lượng sản phẩm không hợp lệ.';
+            RETURN;
+        END IF;
+
+        -- Lấy số lượng cũ
+        SELECT quantity INTO v_old_qty FROM orders WHERE order_id = p_order_id;
+
+        -- Cập nhật lại tồn kho: + số cũ, - số mới
+        UPDATE product 
+        SET stock = stock + NVL(v_old_qty, 0) - p_quantity 
+        WHERE product_id = p_product_id;
+
+        -- Kiểm tra tồn kho sau cập nhật
+        SELECT stock INTO v_stock FROM product WHERE product_id = p_product_id;
+        IF v_stock < 0 THEN
+            ROLLBACK;
+            p_message := 'Lỗi: Cập nhật vượt quá số lượng tồn kho.';
+            RETURN;
+        END IF;
+    END IF;
+
+    -- Tính tổng tiền
+    p_total_amount := v_pet_price + (v_pro_price * NVL(p_quantity, 0));
+
+    -- Cập nhật trạng thái thú cưng nếu thay đổi
+    SELECT pet_id INTO v_old_pet_id FROM orders WHERE order_id = p_order_id;
+
+    IF p_pet_id IS NOT NULL AND v_old_pet_id IS NOT NULL AND p_pet_id != v_old_pet_id THEN
+        -- Trả lại status cũ cho thú cưng trước đó
+        UPDATE pet SET status = 'Còn thú cưng' WHERE pet_id = v_old_pet_id;
+
+        -- Đánh dấu thú cưng mới là đã bán
+        UPDATE pet SET status = 'Đã bán' WHERE pet_id = p_pet_id;
     END IF;
 
     -- Cập nhật đơn hàng
@@ -702,6 +781,7 @@ BEGIN
     SET customer_id  = p_customer_id,
         pet_id       = p_pet_id,
         product_id   = p_product_id,
+        quantity     = p_quantity,
         order_date   = p_order_date,
         total_amount = p_total_amount
     WHERE order_id = p_order_id;
@@ -710,13 +790,17 @@ BEGIN
         p_message := 'Lỗi: Không tìm thấy đơn hàng với ID ' || p_order_id;
     ELSE
         COMMIT;
-        p_message := 'Cập nhật đơn hàng thành công!';
+        p_message := 'Cap nhat don hang thanh cong!';
     END IF;
+
 EXCEPTION
     WHEN OTHERS THEN
+        ROLLBACK;
         p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
+
 
 
 
@@ -794,22 +878,52 @@ END;
 -- Xóa don hàng
 CREATE OR REPLACE PROCEDURE delete_order(
     p_order_id IN INT,
-    p_message OUT VARCHAR2
+    p_message  OUT VARCHAR2
 ) IS
+    v_product_id INT;
+    v_quantity   INT;
+    v_pet_id     INT;
 BEGIN
+    -- Lấy thông tin sản phẩm, số lượng và pet_id từ đơn hàng
+    SELECT product_id, quantity, pet_id
+    INTO v_product_id, v_quantity, v_pet_id
+    FROM orders
+    WHERE order_id = p_order_id;
+
+    -- Xóa đơn hàng
     DELETE FROM orders WHERE order_id = p_order_id;
 
     IF SQL%ROWCOUNT = 0 THEN
-        p_message := 'L?i: Không tìm th?y don hàng v?i mã ID ' || p_order_id;
-    ELSE
-        COMMIT;
-        p_message := 'Xoa don hang thanh cong!';
+        p_message := 'Lỗi: Không tìm thấy đơn hàng với mã ID ' || p_order_id;
+        RETURN;
     END IF;
+
+    -- Hoàn trả số lượng vào kho nếu có product_id
+    IF v_product_id IS NOT NULL THEN
+        UPDATE product
+        SET stock = stock + NVL(v_quantity, 0)
+        WHERE product_id = v_product_id;
+    END IF;
+
+    -- Cập nhật lại trạng thái của thú cưng nếu có pet_id
+    IF v_pet_id IS NOT NULL THEN
+        UPDATE pet
+        SET status = 'Còn thú cưng'
+        WHERE pet_id = v_pet_id;
+    END IF;
+
+    COMMIT;
+    p_message := 'Xoa don hang thanh cong!';
 EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        p_message := 'Lỗi: Không tìm thấy đơn hàng với mã ID ' || p_order_id;
     WHEN OTHERS THEN
-        p_message := 'L?i không xác d?nh: ' || SQLERRM;
+        ROLLBACK;
+        p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
+
 
 
 
