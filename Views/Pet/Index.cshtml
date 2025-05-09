@@ -2,14 +2,38 @@
 
 <h2>Trang quản lý thú cưng</h2>
 
-<input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên thú cưng..." />
+<input type="text" id="searchBox" class="form-control mb-3"
+    placeholder=" Tìm kiếm theo tên, loại hoặc giống thú cưng..." />
 
-<div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
-    <label class="form-check-label" for="onlyAvailableCheckbox">
-        Chỉ hiện thú cưng chưa bán
-    </label>
+<div class="row align-items-center mb-3">
+    <!-- Checkbox -->
+    <div class="col-12 col-md-4 mb-3 mb-md-0">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
+            <label class="form-check-label text-success" for="onlyAvailableCheckbox">
+                Chỉ hiện thú cưng chưa bán ✅
+            </label>
+        </div>
+    </div>
+
+    <!-- Min Price -->
+    <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <input type="number" class="form-control" id="minPriceInput" placeholder="Tối thiểu (VNĐ)">
+    </div>
+
+    <!-- Max Price -->
+    <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <input type="number" class="form-control" id="maxPriceInput" placeholder="Tối đa (VNĐ)">
+    </div>
+
+    <!-- Button -->
+    <div class="col-12 col-md-2">
+        <button class="btn btn-primary w-100" id="filterButton">Lọc</button>
+    </div>
 </div>
+
+
+
 
 <div id="petListContainer">
     @await Html.PartialAsync("_PetListPartial.cshtml", Model)
@@ -19,30 +43,53 @@
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function loadPets(keyword = "", page = 1) {
-            const onlyAvailable = $('#onlyAvailableCheckbox').is(':checked');
+        function loadPets(page = 1) {
+            const keyword = $("#searchBox").val() || "";
+            const onlyAvailable = $("#onlyAvailableCheckbox").is(":checked");
+            const minPrice = $("#minPriceInput").val();
+            const maxPrice = $("#maxPriceInput").val();
+
             $.ajax({
-                url: '/Pet/LoadPetsPartial',
-                data: { keyword: keyword, page: page, onlyAvailable: onlyAvailable },
-                success: function (data) {
-                    $('#petListContainer').html(data);
+                url: "/Pet/LoadPetsPartial",
+                data: {
+                    keyword: keyword,
+                    page: page,
+                    onlyAvailable: onlyAvailable,
+                    minPrice: minPrice || null,
+                    maxPrice: maxPrice || null
+                },
+                success: function (result) {
+                    $("#petListContainer").html(result);
+                    attachPaginationEvents(); // Gắn lại sự kiện click sau khi nội dung mới được load
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi tải dữ liệu.");
                 }
             });
         }
 
+        function attachPaginationEvents() {
+            $(document).off("click", ".page-link").on("click", ".page-link", function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                if (page) loadPets(page);
+            });
+        }
+
         $(document).ready(function () {
+            // Gắn sự kiện
+            attachPaginationEvents();
+
             $('#searchBox').on('input', function () {
-                loadPets($(this).val(), 1);
+                loadPets(1);
             });
 
             $('#onlyAvailableCheckbox').on('change', function () {
-                loadPets($('#searchBox').val(), 1);
+                loadPets(1);
             });
 
-            $(document).on('click', '.page-link', function (e) {
-                e.preventDefault();
-                const page = $(this).data('page');
-                loadPets($('#searchBox').val(), page);
+            $('#filterButton').on('click', function () {
+                loadPets(1);
             });
 
             @if (TempData["Success"] != null)
@@ -53,10 +100,9 @@
                         title: 'Thành công!',
                         text: '@TempData["Success"]',
                         confirmButtonText: 'OK'
-                    });
+                                                    });
                     </text>
             }
-    });
-
+                        });
     </script>
 }

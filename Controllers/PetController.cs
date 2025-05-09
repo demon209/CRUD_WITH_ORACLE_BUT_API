@@ -20,7 +20,7 @@ namespace MVC.Controllers
         [HttpGet("/Thucung")]
         public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var allPets = _petService.GetAllPets();
+            var allPets = _petService.GetAll(); 
             int totalItems = allPets.Count;
             int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -41,16 +41,37 @@ namespace MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult LoadPetsPartial(string keyword = "", int page = 1, int pageSize = 5, bool onlyAvailable = false)
+        public IActionResult LoadPetsPartial(
+                        string keyword = "",
+                        int page = 1,
+                        int pageSize = 5,
+                        bool onlyAvailable = false,
+                        int? minPrice = null,
+                        int? maxPrice = null)
         {
             try
             {
                 var filteredPets = _petService.SearchPets(keyword);
 
+                // Lọc theo trạng thái "chưa bán"
                 if (onlyAvailable)
                 {
                     filteredPets = filteredPets.Where(p => p.Status != "Đã bán").ToList();
                 }
+
+                // Lọc theo khoảng giá
+                if (minPrice.HasValue)
+                {
+                    filteredPets = filteredPets.Where(p => p.Price >= minPrice.Value).ToList();
+                }
+                if (maxPrice.HasValue)
+                {
+                    filteredPets = filteredPets.Where(p => p.Price <= maxPrice.Value).ToList();
+                }
+
+                // Sắp xếp theo ID
+                filteredPets = filteredPets.OrderBy(p => p.PetId).ToList();
+
 
                 int totalItems = filteredPets.Count;
                 int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -61,7 +82,7 @@ namespace MVC.Controllers
                     Pets = petsOnPage,
                     CurrentPage = page,
                     CountPages = countPages,
-                    GenerateUrl = p => Url.Action("LoadPetsPartial", new { keyword = keyword, page = p, onlyAvailable = onlyAvailable })!
+                    GenerateUrl = p => Url.Action("LoadPetsPartial", new { keyword = keyword, page = p, onlyAvailable = onlyAvailable, minPrice, maxPrice })!
                 };
 
                 return PartialView("~/Views/Pet/_PetListPartial.cshtml", model);
@@ -90,8 +111,7 @@ namespace MVC.Controllers
                 imageData = ms.ToArray();
             }
 
-            // Call the service method to add the pet with the image
-            string message = _petService.AddPet(pet, imageData);
+            string message = _petService.Add(pet, imageData); // Gọi đúng hàm Add(pet, image)
 
             if (message.Contains("Them thu cung thanh cong!"))
             {
@@ -99,7 +119,6 @@ namespace MVC.Controllers
                 return RedirectToAction("Index");
             }
 
-            // If there is an error, add it to ModelState
             ModelState.AddModelError("", message);
             return View(pet);
         }
@@ -107,15 +126,12 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult DeletePet(int id, int page = 1)
         {
-            string message = _petService.DeletePet(id);
+            string message = _petService.Delete(id); // Gọi đúng hàm Delete(id)
+
             if (message.Contains("Xoa thu cung thanh cong!"))
-            {
                 TempData["Success"] = message;
-            }
             else
-            {
                 TempData["Error"] = message;
-            }
 
             return RedirectToAction("Index", new { page });
         }
@@ -123,7 +139,7 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult EditPet(int id)
         {
-            var pet = _petService.GetPetById(id);
+            var pet = _petService.GetById(id); // Gọi đúng hàm GetById
             if (pet == null)
                 return NotFound();
 
@@ -145,8 +161,7 @@ namespace MVC.Controllers
                 imageData = ms.ToArray();
             }
 
-            // Gọi phương thức cập nhật - truyền null nếu không có ảnh mới
-            string message = _petService.UpdatePet(pet, imageData);
+            string message = _petService.Update(pet, imageData); // Gọi đúng hàm Update(pet, image)
 
             if (message.Contains("Cap nhat thong tin thu cung thanh cong!"))
             {
@@ -157,7 +172,5 @@ namespace MVC.Controllers
             ModelState.AddModelError("", message);
             return View(pet);
         }
-
-
     }
 }

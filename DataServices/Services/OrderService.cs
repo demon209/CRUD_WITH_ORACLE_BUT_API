@@ -4,17 +4,17 @@ using Oracle.ManagedDataAccess.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace MVC.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService : CrudService<Order>, IOrderService
     {
-        private readonly string _connectionString = Environment.GetEnvironmentVariable("ORACLE_CONN_STRING");
+        public OrderService(IConfiguration configuration) : base(configuration) { }
 
-        public List<Order> GetAllOrders()
+        public override List<Order> GetAll()
         {
-            List<Order> orders = new();
-
+            var orders = new List<Order>();
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
@@ -34,8 +34,7 @@ namespace MVC.Services
 
         public List<Order> SearchOrders(string keyword)
         {
-            List<Order> orders = new();
-
+            var orders = new List<Order>();
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
@@ -56,7 +55,7 @@ namespace MVC.Services
             return orders;
         }
 
-        public Order GetOrderById(int id)
+        public override Order GetById(int id)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
@@ -72,7 +71,7 @@ namespace MVC.Services
             return reader.Read() ? ReadOrder(reader) : null;
         }
 
-        public string AddOrder(Order order)
+        public override string Add(Order order)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
@@ -102,13 +101,12 @@ namespace MVC.Services
 
             cmd.ExecuteNonQuery();
 
-            // ✅ Cách xử lý OracleDecimal an toàn
             order.TotalAmount = GetDecimalFromOracleParam(totalAmountParam);
 
             return messageParam.Value?.ToString() ?? "Không có phản hồi từ thủ tục.";
         }
 
-        public string UpdateOrder(Order order)
+        public override string Update(Order order)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
@@ -139,13 +137,12 @@ namespace MVC.Services
 
             cmd.ExecuteNonQuery();
 
-            // ✅ Cách xử lý OracleDecimal an toàn
             order.TotalAmount = GetDecimalFromOracleParam(totalAmountParam);
 
             return messageParam.Value?.ToString() ?? "Không có phản hồi từ thủ tục.";
         }
 
-        public string DeleteOrder(int orderId)
+        public override string Delete(int orderId)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
@@ -176,15 +173,9 @@ namespace MVC.Services
             };
         }
 
-        /// <summary>
-        /// Helper method để đọc OracleDecimal an toàn
-        /// </summary>
         private decimal GetDecimalFromOracleParam(OracleParameter param)
         {
-            if (param?.Value is OracleDecimal oracleDecimal && !oracleDecimal.IsNull)
-                return oracleDecimal.Value;
-
-            return 0; // hoặc return null nếu bạn dùng decimal? trong Order model
+            return param?.Value is OracleDecimal dec && !dec.IsNull ? dec.Value : 0;
         }
     }
 }

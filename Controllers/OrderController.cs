@@ -28,7 +28,7 @@ namespace MVC.Controllers
         {
             try
             {
-                var orders = _orderService.GetAllOrders();
+                var orders = _orderService.GetAll();
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace MVC.Controllers
         [HttpGet("/Hoadon")]
         public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var allOrders = _orderService.GetAllOrders();
+            var allOrders = _orderService.GetAll();
 
             int totalItems = allOrders.Count;
             int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -91,9 +91,9 @@ namespace MVC.Controllers
         [HttpGet("Order/CreateOrders")]
         public IActionResult CreateOrders()
         {
-            var pets = _petService.GetAllPets();
-            var products = _productService.GetAllProducts();
-            var customers = _customerService.GetAllCustomers();
+            var pets = _petService.GetAll();
+            var products = _productService.GetAll();
+            var customers = _customerService.GetAll();
             var availablePets = pets.Where(p => p.Status != "Đã bán").ToList();
             ViewBag.Pets = availablePets;
 
@@ -112,12 +112,12 @@ namespace MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Pets = _petService.GetAllPets();
-                ViewBag.Products = _productService.GetAllProducts();
+                ViewBag.Pets = _petService.GetAll();
+                ViewBag.Products = _productService.GetAll();
                 return View(order);
             }
 
-            var message = _orderService.AddOrder(order);
+            var message = _orderService.Add(order);
             if (message.Contains("Them don hang thanh cong!"))
             {
                 TempData["Success"] = message;
@@ -125,9 +125,9 @@ namespace MVC.Controllers
             }
 
             // Nếu thêm thất bại, cũng cần gán lại ViewBag
-            ViewBag.Pets = _petService.GetAllPets();
-            ViewBag.Products = _productService.GetAllProducts();
-            ViewBag.Customers = _customerService.GetAllCustomers();
+            ViewBag.Pets = _petService.GetAll();
+            ViewBag.Products = _productService.GetAll();
+            ViewBag.Customers = _customerService.GetAll();
             ModelState.AddModelError("", message);
             return View(order);
         }
@@ -136,7 +136,7 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult DeleteOrder(int id, int page = 1)
         {
-            var message = _orderService.DeleteOrder(id);
+            var message = _orderService.Delete(id);
             if (message.Contains("Xoa don hang thanh cong!"))
             {
                 TempData["Success"] = message;
@@ -151,13 +151,13 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult EditOrder(int id)
         {
-            var order = _orderService.GetOrderById(id);
+            var order = _orderService.GetById(id);
             if (order == null)
                 return NotFound();
 
-            var pets = _petService.GetAllPets();
-            var products = _productService.GetAllProducts();
-            var customers = _customerService.GetAllCustomers();
+            var pets = _petService.GetAll();
+            var products = _productService.GetAll();
+            var customers = _customerService.GetAll();
 
             // Gộp tên khách hàng
             var customerList = customers.Select(c => new
@@ -207,7 +207,7 @@ namespace MVC.Controllers
             if (!ModelState.IsValid)
                 return View(order);
 
-            var message = _orderService.UpdateOrder(order);
+            var message = _orderService.Update(order);
             if (message.Contains("Cap nhat don hang thanh cong!"))
             {
                 TempData["Success"] = message;
@@ -220,15 +220,15 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult OrderDetail(int id)
         {
-            var order = _orderService.GetOrderById(id);
+            var order = _orderService.GetById(id);
             if (order == null)
             {
                 return NotFound();
             }
 
-            var customer = _customerService.GetCustomerById(order.CustomerId);
-            var pet = order.PetId.HasValue ? _petService.GetPetById(order.PetId.Value) : null;
-            var product = order.ProductId.HasValue ? _productService.GetProductById(order.ProductId.Value) : null;
+            var customer = _customerService.GetById(order.CustomerId);
+            var pet = order.PetId.HasValue ? _petService.GetById(order.PetId.Value) : null;
+            var product = order.ProductId.HasValue ? _productService.GetById(order.ProductId.Value) : null;
 
             var viewModel = new OrderDetailViewModel
             {

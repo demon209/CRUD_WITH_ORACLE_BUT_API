@@ -7,138 +7,97 @@ using Microsoft.Extensions.Configuration;
 
 namespace MVC.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : CrudService<Product>, IProductService
     {
-        private readonly string _connectionString;
+        public ProductService(IConfiguration configuration) : base(configuration) { }
 
-        public ProductService(IConfiguration configuration)
+        public override List<Product> GetAll()
         {
-            _connectionString = Environment.GetEnvironmentVariable("ORACLE_CONN_STRING")
-                                ?? configuration.GetConnectionString("OracleConnection");
-        }
+            var products = new List<Product>();
+            using var conn = new OracleConnection(_connectionString);
+            conn.Open();
 
-        public List<Product> GetAllProducts()
-        {
-            var Products = new List<Product>();
+            var cmd = new OracleCommand("SELECT * FROM product ORDER BY product_id ASC", conn);
+            using var reader = cmd.ExecuteReader();
 
-            using (var conn = new OracleConnection(_connectionString))
+            while (reader.Read())
             {
-                conn.Open();
-                var cmd = new OracleCommand("SELECT product_id, product_name, category, price, stock FROM product order by product_id asc", conn);
-                using var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Products.Add(ReadProduct(reader));
-                }
+                products.Add(ReadProduct(reader));
             }
 
-            return Products;
+            return products;
         }
 
         public List<Product> SearchProducts(string keyword)
         {
-            var Products = new List<Product>();
-            using (var conn = new OracleConnection(_connectionString))
-            {
-                conn.Open();
-                string query = "SELECT product_id, product_name, category, price, stock FROM product WHERE LOWER(product_name) LIKE :keyword ORDER BY product_id ASC";
-                var cmd = new OracleCommand(query, conn);
-                cmd.Parameters.Add(new OracleParameter("keyword", $"%{keyword.ToLower()}%"));
+            var products = new List<Product>();
+            using var conn = new OracleConnection(_connectionString);
+            conn.Open();
 
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Products.Add(ReadProduct(reader));
-                }
+            var cmd = new OracleCommand("search_product", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.Add("p_keyword", OracleDbType.Varchar2).Value = keyword ?? string.Empty;
+            cmd.Parameters.Add("p_result", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                products.Add(ReadProduct(reader));
             }
 
-            return Products;
+            return products;
         }
 
-        public Product GetProductById(int id)
+        public override Product GetById(int id)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            var cmd = new OracleCommand("SELECT product_id, product_name, category, price, stock FROM product WHERE product_id = :ProductId", conn);
+            var cmd = new OracleCommand("SELECT * FROM product WHERE product_id = :ProductId", conn);
             cmd.Parameters.Add(new OracleParameter("ProductId", id));
 
             using var reader = cmd.ExecuteReader();
             return reader.Read() ? ReadProduct(reader) : null;
         }
 
-        public string AddProduct(Product product)
+        public override string Add(Product product)
         {
-            using var conn = new OracleConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new OracleCommand("add_product", conn)
+            var inputParams = new Dictionary<string, object>
             {
-                CommandType = CommandType.StoredProcedure
+                { "p_product_name", product.ProductName ?? string.Empty },
+                { "p_category", product.ProductCategory ?? string.Empty },
+                { "p_price", product.ProductPrice },
+                { "p_stock", product.ProductStock }
             };
 
-            cmd.Parameters.Add("p_product_name", OracleDbType.Varchar2).Value = product.ProductName;
-            cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = product.ProductCategory;
-            cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = product.ProductPrice;
-            cmd.Parameters.Add("p_stock", OracleDbType.Int32).Value = product.ProductStock;
-
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
-            {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
-
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return ExecuteStoredProcedure("add_product", inputParams, "p_message");
         }
 
-        public string UpdateProduct(Product product)
+        public override string Update(Product product)
         {
-            using var conn = new OracleConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new OracleCommand("update_product", conn)
+            var inputParams = new Dictionary<string, object>
             {
-                CommandType = CommandType.StoredProcedure
+                { "p_product_id", product.ProductId },
+                { "p_product_name", product.ProductName ?? string.Empty },
+                { "p_category", product.ProductCategory ?? string.Empty },
+                { "p_price", product.ProductPrice },
+                { "p_stock", product.ProductStock }
             };
 
-            cmd.Parameters.Add("p_product_id", OracleDbType.Int32).Value = product.ProductId;
-            cmd.Parameters.Add("p_product_name", OracleDbType.Varchar2).Value = product.ProductName;
-            cmd.Parameters.Add("p_category", OracleDbType.Varchar2).Value = product.ProductCategory;
-            cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = product.ProductPrice;
-            cmd.Parameters.Add("p_stock", OracleDbType.Int32).Value = product.ProductStock;
-
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
-            {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
-
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return ExecuteStoredProcedure("update_product", inputParams, "p_message");
         }
 
-        public string DeleteProduct(int id)
+        public override string Delete(int id)
         {
-            using var conn = new OracleConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new OracleCommand("delete_product", conn)
+            var inputParams = new Dictionary<string, object>
             {
-                CommandType = CommandType.StoredProcedure
+                { "p_product_id", id }
             };
 
-            cmd.Parameters.Add(new OracleParameter("p_product_id", id));
-
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
-            {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
-
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return ExecuteStoredProcedure("delete_product", inputParams, "p_message");
         }
 
         private Product ReadProduct(OracleDataReader reader)

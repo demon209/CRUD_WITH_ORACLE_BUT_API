@@ -14,8 +14,14 @@
     <input asp-for="Breed" class="form-control" />
     <label>Age</label>
     <input asp-for="Age" class="form-control" />
-    <label>Gender</label>
-    <input asp-for="Gender" class="form-control" />
+    <div class="form-group">
+        <label>Giới tính</label>
+        <select asp-for="Gender" class="form-control" required>
+            <option value="Đực">Đực</option>
+            <option value="Cái">Cái</option>
+            <option value="Lưỡng tính">Lưỡng tính</option>
+        </select>
+    </div>
     <label>Price</label>
     <input asp-for="Price" class="form-control" />
     

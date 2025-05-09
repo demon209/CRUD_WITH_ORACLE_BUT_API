@@ -19,7 +19,7 @@ namespace MVC.Controllers
         [HttpGet("/Sanpham")]
         public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var allProducts = _productService.GetAllProducts();
+            var allProducts = _productService.GetAll();
             int totalItems = allProducts.Count;
             int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -67,7 +67,7 @@ namespace MVC.Controllers
             if (!ModelState.IsValid)
                 return View(product);
 
-            var resultMessage = _productService.AddProduct(product);
+            var resultMessage = _productService.Add(product);
 
             if (resultMessage.Contains("Them san pham thanh cong!"))
             {
@@ -82,7 +82,7 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult EditProduct(int id)
         {
-            var product = _productService.GetProductById(id);
+            var product = _productService.GetById(id);
             if (product == null)
                 return NotFound();
 
@@ -95,7 +95,7 @@ namespace MVC.Controllers
             if (!ModelState.IsValid)
                 return View(product);
 
-            var resultMessage = _productService.UpdateProduct(product);
+            var resultMessage = _productService.Update(product);
 
             if (resultMessage.Contains("Cap nhat thong tin san pham thanh cong!"))
             {
@@ -110,7 +110,7 @@ namespace MVC.Controllers
         [HttpPost]
         public IActionResult DeleteProduct(int id, int page = 1)
         {
-            var resultMessage = _productService.DeleteProduct(id);
+            var resultMessage = _productService.Delete(id);
 
             if (resultMessage.Contains("Xoa san pham thanh cong!"))
             {

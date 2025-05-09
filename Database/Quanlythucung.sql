@@ -924,7 +924,63 @@ END;
 /
 
 
+CREATE OR REPLACE PROCEDURE search_product (
+    p_keyword IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result FOR
+        SELECT product_id, product_name, category, price, stock
+        FROM product
+        WHERE LOWER(product_name) LIKE '%' || LOWER(p_keyword) || '%';
+END;
+/
+CREATE OR REPLACE PROCEDURE search_customer (
+    p_keyword IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result FOR
+        SELECT customer_id, first_name, last_name, phone_number, email, address
+        FROM customer
+        WHERE LOWER(first_name) LIKE '%' || LOWER(p_keyword) || '%'
+           OR LOWER(last_name) LIKE '%' || LOWER(p_keyword) || '%'
+END;
+/
+CREATE OR REPLACE PROCEDURE search_pet (
+    p_keyword IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+)
+AS
+BEGIN
+    OPEN p_result FOR
+        SELECT pet_id, pet_name, pet_type, breed, gender, age, price, status
+        FROM pet
+        WHERE LOWER(pet_name) LIKE '%' || LOWER(p_keyword) || '%'
+           OR LOWER(pet_type) = LOWER(p_keyword)
+END;
+/
 
+CREATE OR REPLACE PROCEDURE search_order(
+    p_keyword IN VARCHAR2,
+    p_result OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_result FOR
+        SELECT order_id,
+               customer_id,
+               pet_id,
+               product_id,
+               quantity,
+               order_date,
+               total_amount
+        FROM orders
+        WHERE TO_CHAR(order_date, 'YYYY-MM-DD') LIKE p_keyword
+        ORDER BY order_id ASC;
+END;
+/
 
 
 

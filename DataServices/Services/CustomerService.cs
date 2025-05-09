@@ -7,139 +7,101 @@ using Microsoft.Extensions.Configuration;
 
 namespace MVC.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : CrudService<Customer>, ICustomerService
     {
-        private readonly string _connectionString;
+        private const string BaseSelect = "SELECT customer_id, first_name, last_name, phone_number, email, address FROM customer";
 
-        public CustomerService(IConfiguration configuration)
+        public CustomerService(IConfiguration configuration) : base(configuration) { }
+
+        public override List<Customer> GetAll()
         {
-            _connectionString = Environment.GetEnvironmentVariable("ORACLE_CONN_STRING")
-                                ?? configuration.GetConnectionString("OracleConnection");
-        }
+            var customers = new List<Customer>();
+            using var conn = new OracleConnection(_connectionString);
+            conn.Open();
 
-        public List<Customer> GetAllCustomers()
-        {
-            var Customers = new List<Customer>();
+            var cmd = new OracleCommand($"{BaseSelect} ORDER BY customer_id ASC", conn);
+            using var reader = cmd.ExecuteReader();
 
-            using (var conn = new OracleConnection(_connectionString))
+            while (reader.Read())
             {
-                conn.Open();
-                var cmd = new OracleCommand("SELECT customer_id, first_name, last_name, phone_number, email, address FROM customer order by customer_id asc", conn);
-                using var reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    Customers.Add(ReadCustomer(reader));
-                }
+                customers.Add(ReadCustomer(reader));
             }
 
-            return Customers;
+            return customers;
         }
 
-        public List<Customer> SearchCustomers(string keyword)
-        {
-            var Customers = new List<Customer>();
-            using (var conn = new OracleConnection(_connectionString))
-            {
-                conn.Open();
-                string query = "SELECT customer_id, first_name, last_name, phone_number, email, address FROM customer WHERE LOWER(last_name) LIKE :keyword ORDER BY customer_id ASC";
-                var cmd = new OracleCommand(query, conn);
-                cmd.Parameters.Add(new OracleParameter("keyword", $"%{keyword.ToLower()}%"));
-
-                using var reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Customers.Add(ReadCustomer(reader));
-                }
-            }
-
-            return Customers;
-        }
-
-        public Customer GetCustomerById(int id)
+        public override Customer GetById(int id)
         {
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            var cmd = new OracleCommand("SELECT customer_id, first_name, last_name, phone_number, email, address FROM customer WHERE customer_id = :CustomerId", conn);
+            var cmd = new OracleCommand($"{BaseSelect} WHERE customer_id = :CustomerId", conn);
             cmd.Parameters.Add(new OracleParameter("CustomerId", id));
 
             using var reader = cmd.ExecuteReader();
             return reader.Read() ? ReadCustomer(reader) : null;
         }
 
-        public string AddCustomer(Customer customer)
+        public override string Add(Customer customer)
         {
-            using var conn = new OracleConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new OracleCommand("add_customer", conn)
+            var inputParams = new Dictionary<string, object>
             {
-                CommandType = CommandType.StoredProcedure
+                { "p_first_name", customer.FirstName },
+                { "p_last_name", customer.LastName },
+                { "p_phone_number", customer.PhoneNumber },
+                { "p_email", customer.Email },
+                { "p_address", customer.Address }
             };
-            cmd.Parameters.Add(new OracleParameter("p_first_name", customer.FirstName));
-            cmd.Parameters.Add(new OracleParameter("p_last_name", customer.LastName));
-            cmd.Parameters.Add(new OracleParameter("p_phone_number", customer.PhoneNumber));
-            cmd.Parameters.Add(new OracleParameter("p_email", customer.Email));
-            cmd.Parameters.Add(new OracleParameter("p_address", customer.Address));
 
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
-            {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
-
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return ExecuteStoredProcedure("add_customer", inputParams, "p_message");
         }
 
-        public string UpdateCustomer(Customer customer)
+        public override string Update(Customer customer)
         {
-            using var conn = new OracleConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new OracleCommand("update_customer", conn)
+            var inputParams = new Dictionary<string, object>
             {
-                CommandType = CommandType.StoredProcedure
+                { "p_customer_id", customer.CustomerId },
+                { "p_first_name", customer.FirstName },
+                { "p_last_name", customer.LastName },
+                { "p_phone_number", customer.PhoneNumber },
+                { "p_email", customer.Email },
+                { "p_address", customer.Address }
             };
 
-            cmd.Parameters.Add("p_customer_id", OracleDbType.Int32).Value = customer.CustomerId;
-            cmd.Parameters.Add("p_first_name", OracleDbType.Varchar2).Value = customer.FirstName;
-            cmd.Parameters.Add("p_last_name", OracleDbType.Varchar2).Value = customer.LastName;
-            cmd.Parameters.Add("p_phone_number", OracleDbType.Varchar2).Value = customer.PhoneNumber;
-            cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = customer.Email;
-            cmd.Parameters.Add("p_address", OracleDbType.Varchar2).Value = customer.Address;
-
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
-            {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
-
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return ExecuteStoredProcedure("update_customer", inputParams, "p_message");
         }
 
-        public string DeleteCustomer(int id)
+        public override string Delete(int id)
         {
+            var inputParams = new Dictionary<string, object>
+            {
+                { "p_customer_id", id }
+            };
+
+            return ExecuteStoredProcedure("delete_customer", inputParams, "p_message");
+        }
+
+        public List<Customer> SearchCustomers(string keyword)
+        {
+            var customers = new List<Customer>();
             using var conn = new OracleConnection(_connectionString);
             conn.Open();
 
-            var cmd = new OracleCommand("delete_customer", conn)
+            var cmd = new OracleCommand("search_customer", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
-            cmd.Parameters.Add(new OracleParameter("p_customer_id", id));
+            cmd.Parameters.Add("p_keyword", OracleDbType.Varchar2).Value = keyword;
+            cmd.Parameters.Add("p_result", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
-            var messageParam = new OracleParameter("p_message", OracleDbType.Varchar2, 4000)
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                Direction = ParameterDirection.Output
-            };
-            cmd.Parameters.Add(messageParam);
+                customers.Add(ReadCustomer(reader));
+            }
 
-            cmd.ExecuteNonQuery();
-            return messageParam.Value.ToString();
+            return customers;
         }
 
         private Customer ReadCustomer(OracleDataReader reader)

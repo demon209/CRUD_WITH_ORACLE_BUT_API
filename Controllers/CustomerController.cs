@@ -19,14 +19,14 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult GetCustomers()
         {
-            var customers = _customerService.GetAllCustomers();
+            var customers = _customerService.GetAll();
             return Ok(customers);
         }
 
         [HttpGet("/Khachhang")]
         public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var allCustomers = _customerService.GetAllCustomers();
+            var allCustomers = _customerService.GetAll();
             int totalItems = allCustomers.Count;
             int countPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -81,7 +81,7 @@ namespace MVC.Controllers
             if (!ModelState.IsValid)
                 return View(customer);
 
-            var message = _customerService.AddCustomer(customer);
+            var message = _customerService.Add(customer);
             if (message.Contains("Them khach hang thanh cong!"))
             {
                 TempData["Success"] = message;
@@ -97,7 +97,7 @@ namespace MVC.Controllers
         {
             try
             {
-                var resultMessage = _customerService.DeleteCustomer(id);
+                var resultMessage = _customerService.Delete(id);
                 if (resultMessage.Contains("Xoa khach hang thanh cong!"))
                 {
                     TempData["Success"] = resultMessage;
@@ -118,7 +118,7 @@ namespace MVC.Controllers
         [HttpGet]
         public IActionResult EditCustomer(int id)
         {
-            var customer = _customerService.GetCustomerById(id);
+            var customer = _customerService.GetById(id);
             if (customer == null)
                 return NotFound();
 
@@ -131,7 +131,7 @@ namespace MVC.Controllers
             if (!ModelState.IsValid)
                 return View(customer);
 
-            var message = _customerService.UpdateCustomer(customer);
+            var message = _customerService.Update(customer);
             if (message.Contains("Cap nhat thong tin khach hang thanh cong!"))
             {
                 TempData["Success"] = message;
