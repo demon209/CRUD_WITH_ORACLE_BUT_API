@@ -27,6 +27,14 @@
         <input asp-for="ProductCategory" class="form-control" />
     </div>
     <div class="form-group">
+        <label>Type</label>
+        <select asp-for="ProductType" class="form-control" required>
+            <option value="">--- Vui lòng chọn 👇---</option>
+            <option value="product">product</option>
+            <option value="service">service</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label>Product Price</label>
         <input asp-for="ProductPrice" class="form-control" />
     </div>

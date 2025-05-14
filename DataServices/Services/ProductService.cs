@@ -70,7 +70,8 @@ namespace MVC.Services
                 { "p_product_name", product.ProductName ?? string.Empty },
                 { "p_category", product.ProductCategory ?? string.Empty },
                 { "p_price", product.ProductPrice },
-                { "p_stock", product.ProductStock }
+                { "p_stock", product.ProductStock },
+                { "p_product_type", product.ProductType ?? "product" }
             };
 
             return ExecuteStoredProcedure("add_product", inputParams, "p_message");
@@ -84,7 +85,8 @@ namespace MVC.Services
                 { "p_product_name", product.ProductName ?? string.Empty },
                 { "p_category", product.ProductCategory ?? string.Empty },
                 { "p_price", product.ProductPrice },
-                { "p_stock", product.ProductStock }
+                { "p_stock", product.ProductStock },
+                { "p_product_type", product.ProductType ?? "product" }
             };
 
             return ExecuteStoredProcedure("update_product", inputParams, "p_message");
@@ -109,6 +111,7 @@ namespace MVC.Services
                 ProductCategory = reader.GetString(2),
                 ProductPrice = reader.GetDecimal(3),
                 ProductStock = reader.GetInt32(4),
+                ProductType = reader.GetString(5) // Ensure column index matches actual DB structure
             };
         }
     }

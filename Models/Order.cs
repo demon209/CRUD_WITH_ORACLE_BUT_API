@@ -13,5 +13,6 @@ namespace MVC.Models
         public Customer? Customer { get; set; }
         public Pet? Pet { get; set; }
         public Product? Product { get; set; }
+        
     }
 }

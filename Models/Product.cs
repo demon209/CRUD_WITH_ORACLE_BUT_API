@@ -7,6 +7,7 @@ public class Product
     public string ProductCategory {get; set;}
     public decimal ProductPrice {get; set;}
     public  int ProductStock {get; set;}
+    public string ProductType {get;set;}
 }
 
 }

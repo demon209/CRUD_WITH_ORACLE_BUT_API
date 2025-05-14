@@ -1,0 +1,77 @@
+@model MVC.Models.CustomerPet
+
+
+@if (@Model.Status == "Hoàn thành")
+{
+    <h2>Không thể sửa thông tin dịch vụ có ID: @Model.CustomerId</h2>
+    <h3 class="mt-3 text-warning">Không thể sửa khi đang trong trạng thái hoàn thành</h3>
+    <div class="mt-2">
+        <a href="/Dvdanglam" class="btn btn-secondary ms-2">↩️ Quay lại</a>
+    </div>
+}
+else
+{
+    <h2>Sửa thông tin dịch vụ có ID: @Model.CustomerId</h2>
+    <form asp-action="EditCustomerPet" method="post">
+        <!-- Display validation errors -->
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="CustomerPetId" />
+        <div class="form-group mb-3">
+            <label>Khách hàng</label>
+            <select id="CustomerId" asp-for="CustomerId" asp-items="ViewBag.Customers"
+                class="form-control form-control-lg mb-4">
+                <option value="">--Chọn Khách hàng--</option>
+            </select>
+            <span asp-validation-for="CustomerId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Dịch vụ</label>
+            <select id="ProductId" asp-for="ProductId" asp-items="ViewBag.Products"
+                class="form-control form-control-lg mb-4">
+                <option value="">--Chọn sản phẩm--</option>
+            </select>
+            <span asp-validation-for="ProductId" class="text-danger"></span>
+        </div>
+
+        <label>Pet Name</label>
+        <input asp-for="PetName" class="form-control" />
+        <span asp-validation-for="PetName" class="text-danger"></span>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">💾 Lưu thay đổi</button>
+            <a href="/Dvdanglam" class="btn btn-secondary ms-2">↩️ Quay lại</a>
+        </div>
+    </form>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    @section Scripts {
+        <!-- Select2 CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+
+        <!-- Select2 JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.full.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                console.log('CustomerId element:', $('#CustomerId').length);
+                console.log('ProductId element:', $('#ProductId').length);
+
+                if ($('#CustomerId').length) {
+                    $('#CustomerId').select2({
+                        placeholder: "--Chọn Khách hàng--",
+                        allowClear: true
+                    });
+                }
+                if ($('#ProductId').length) {
+                    $('#ProductId').select2({
+                        placeholder: "--Chọn dịch vụ--",
+                        allowClear: true
+                    });
+                }
+            });
+        </script>
+    }
+}

@@ -1,11 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Views\\Customer",
-    "\\Views\\Order",
+    "\\Controllers",
+    "\\DataServices",
+    "\\DataServices\\IServives",
+    "\\DataServices\\Services",
+    "\\Models",
+    "\\routers",
+    "\\Views",
     "\\Views\\Pet",
     "\\Views\\Product"
   ],
-  "SelectedNode": "\\Views",
+  "SelectedNode": "\\MVC.sln",
   "PreviewInSolutionExplorer": false
 }

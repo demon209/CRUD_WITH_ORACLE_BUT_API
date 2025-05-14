@@ -31,4 +31,7 @@ public class OrderListViewModel : PaginationViewModel
     
 }
 
-
+public class CustomerPetListViewModel : PaginationViewModel
+{
+    public List<CustomerPet> CustomerPets { get; set; }
+}

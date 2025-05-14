@@ -3,60 +3,56 @@
   "WorkspaceRootPath": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\_ProductListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Product\\_ProductListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\product\\_productlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\product\\_productlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\_PetListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Pet\\_PetListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\customer\\_customerlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\customer\\_customerlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\_OrderListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Order\\_OrderListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\order\\_orderlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\order\\_orderlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\_CustomerListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Customer\\_CustomerListPartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\pet\\_petlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\pet\\_petlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\CreateProducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Product\\CreateProducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Database\\Quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\product\\createproducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\product\\createproducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\CreateOrders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Order\\CreateOrders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\order\\createorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\order\\createorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\CreateCustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Customer\\CreateCustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\customer\\createcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\customer\\createcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\OrderController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\OrderController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\ProductController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\ProductController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\CreatePets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Views\\Pet\\CreatePets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\pet\\createpets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\pet\\createpets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\PetController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\PetController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\CustomerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\CustomerController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Database\\Quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -70,7 +66,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "_CustomerListPartial.cshtml",
               "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\_CustomerListPartial.cshtml",
               "RelativeDocumentMoniker": "Views\\Customer\\_CustomerListPartial.cshtml",
@@ -78,8 +74,7 @@
               "RelativeToolTip": "Views\\Customer\\_CustomerListPartial.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:50.131Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T07:48:50.131Z"
             },
             {
               "$type": "Document",
@@ -89,7 +84,7 @@
               "RelativeDocumentMoniker": "Views\\Product\\_ProductListPartial.cshtml",
               "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\_ProductListPartial.cshtml",
               "RelativeToolTip": "Views\\Product\\_ProductListPartial.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-05-06T07:48:39.142Z",
               "EditorCaption": ""
@@ -104,12 +99,11 @@
               "RelativeToolTip": "Views\\Order\\_OrderListPartial.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:34.315Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T07:48:34.315Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "_PetListPartial.cshtml",
               "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\_PetListPartial.cshtml",
               "RelativeDocumentMoniker": "Views\\Pet\\_PetListPartial.cshtml",
@@ -117,23 +111,22 @@
               "RelativeToolTip": "Views\\Pet\\_PetListPartial.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:27.865Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Quanlythucung.sql ",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql",
-              "RelativeDocumentMoniker": "Database\\Quanlythucung.sql",
-              "ToolTip": "Quanlythucung.sql ",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-06T07:46:48.371Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T07:48:27.865Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "Quanlythucung.sql",
+              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql",
+              "RelativeDocumentMoniker": "Database\\Quanlythucung.sql",
+              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql",
+              "RelativeToolTip": "Database\\Quanlythucung.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-05-06T07:46:48.371Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "CreateProducts.cshtml",
               "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\CreateProducts.cshtml",
               "RelativeDocumentMoniker": "Views\\Product\\CreateProducts.cshtml",
@@ -141,8 +134,7 @@
               "RelativeToolTip": "Views\\Product\\CreateProducts.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:18:26.483Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T07:18:26.483Z"
             },
             {
               "$type": "Document",
@@ -154,8 +146,7 @@
               "RelativeToolTip": "Views\\Order\\CreateOrders.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:18:08.802Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T07:18:08.802Z"
             },
             {
               "$type": "Document",

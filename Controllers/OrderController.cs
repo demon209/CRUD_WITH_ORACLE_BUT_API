@@ -162,7 +162,7 @@ namespace MVC.Controllers
             // Gộp tên khách hàng
             var customerList = customers.Select(c => new
             {
-                Text = $"{c.FirstName} {c.LastName}",
+                Text = $"{c.CustomerId} - {c.LastName?.Trim()} {c.FirstName?.Trim()} - {c.PhoneNumber} - {c.Email}",
                 Value = c.CustomerId
             }).ToList();
 

@@ -7,7 +7,8 @@
             <tr>
                 <th>Product ID</th>
                 <th>Tên sản phẩm</th>
-                <th>Loại</th>
+                <th>Thể loại</th>
+                <th>Phân loại</th>
                 <th>Giá</th>
                 <th>Số lượng trong kho</th>
                 <th>Hành động</th>
@@ -17,8 +18,10 @@
             @if (Model.Products == null || Model.Products.Count == 0)
             {
                 <tr>
-                    <td colspan="5" class="text-center text-danger">Không có sản phẩm nào. Vui
-                        lòng quay lại trang trước hoặc tạo mới.</td>
+                    <td colspan="7" class="text-center text-danger">Không có sản phẩm nào. Vui
+                        lòng quay lại trang trước hoặc tạo mới.
+                        <a href="/Sanpham" class="btn btn-secondary ms-2">↩️ Quay lại</a>
+                    </td>
                 </tr>
             }
             else
@@ -29,8 +32,19 @@
                         <td>@product.ProductId</td>
                         <td>@product.ProductName</td>
                         <td>@product.ProductCategory</td>
+                        <td>@product.ProductType</td>
                         <td>@product.ProductPrice</td>
-                        <td>@(product.ProductStock == 0 ? "Hết hàng" : product.ProductStock.ToString())</td>
+                        <td>@if(product.ProductType == "service"){
+                            @: <p class="text-success">Dịch vụ</p>
+                            }
+                            else if(product.ProductStock == 0 && product.ProductType != "service"){
+                                @: <p class="text-danger btn-warning">Hết hàng</p>
+                            }
+                            else{
+                                @product.ProductStock
+                            }
+
+                        </td>
 
                         <td>
                             <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">

@@ -2,16 +2,18 @@ namespace MVC.Models
 {
     public class CustomerPet
     {
-        public required int CustomerPetId { get; set; }
-        public required int CustomerId { get; set; }
-        public required int PetId { get; set; }
-        public required DateTime PurchaseDate { get; set; }
-        public required decimal PriceAtPurchase { get; set; }
+        public int CustomerPetId { get; set; }
 
-        
-        // Foreign key
-        public Customer Customer { get; set; } = null!;
-        public Pet Pet { get; set; } = null!;
+        public int CustomerId { get; set; }
 
+        public string PetName { get; set; }
+
+        public int ProductId { get; set; }
+        public string? Status {get; set;}
+
+        // Thêm thuộc tính CustomerName và ProductName để lưu trữ thông tin tên khách hàng và tên sản phẩm
+        public string? FirstName { get; set; } // Tên khách hàng
+        public string? LastName { get; set; } // Tên khách hàng
+        public string? ProductName { get; set; }   // Tên sản phẩm
     }
 }

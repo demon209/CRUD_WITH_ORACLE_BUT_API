@@ -1,0 +1,80 @@
+@model MVC.Models.CustomerPet
+
+<h2>Thêm dịch vụ mới</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+{
+    <div class="alert alert-danger">
+        @error.ErrorMessage
+    </div>
+}
+
+<form asp-action="CreateCustomerPets" method="post" class="form">
+    <!-- Chọn khách hàng -->
+    <div class="form-group mb-3">
+        <label>Khách hàng</label>
+        <select id="CustomerId" asp-for="CustomerId" asp-items="ViewBag.Customers" class="form-control form-control-lg mb-4">
+            <option value="">--Chọn Khách hàng--</option>
+        </select>
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+
+    <!-- Chọn sản phẩm -->
+    <div class="form-group mb-3">
+        <label>Dịch vụ</label>
+        <select id="ProductId" asp-for="ProductId" asp-items="ViewBag.Products" class="form-control form-control-lg mb-4">
+            <option value="">--Chọn dịch vụ--</option>
+        </select>
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div>
+
+    <!-- Tên thú cưng -->
+    <div class="form-group">
+        <label>Pet Name</label>
+        <input asp-for="PetName" class="form-control" />
+        <span asp-validation-for="PetName" class="text-danger"></span>
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Thêm</button>
+    <a href="/Dvdanglam" class="btn btn-success">Hủy</a>
+</form>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section Scripts {
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.full.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            console.log('CustomerId element:', $('#CustomerId').length);
+            console.log('ProductId element:', $('#ProductId').length);
+
+            if ($('#CustomerId').length) {
+                $('#CustomerId').select2({
+                    placeholder: "--Chọn Khách hàng--",
+                    allowClear: true
+                });
+            }
+            if ($('#ProductId').length) {
+                $('#ProductId').select2({
+                    placeholder: "--Chọn dịch vụ--",
+                    allowClear: true
+                });
+            }
+        });
+    </script>
+}
+
