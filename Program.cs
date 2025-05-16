@@ -34,9 +34,9 @@ app.UseAuthorization();
 // Sử dụng UseEndpoints để đăng ký các routes
 app.UseEndpoints(endpoints =>
 {
-    RouteConfig.RegisterRoutes(endpoints); 
-
-    
+    RouteConfig.RegisterRoutes(endpoints);   // Routing cho MVC (View)
+    endpoints.MapControllers();              // Routing cho API Controllers
 });
+
 
 app.Run();

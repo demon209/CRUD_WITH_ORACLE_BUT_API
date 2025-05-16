@@ -1,129 +1,134 @@
-@model OrderDetailViewModel
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
 
 <div class="mb-3">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-        <h2 class="mb-2 mb-md-0">📦 Chi tiết đơn hàng có ID: @Model.Order.OrderId</h2>
-        <a href="/HoaDon" class="btn btn-secondary">Quay lại trang hóa đơn</a>
+        <h2 class="mb-2 mb-md-0" id="order-title">📦 Chi tiết đơn hàng</h2>
+        <div>
+            <a href="/HoaDon" class="btn btn-secondary">⬅ Quay lại</a>
+            <button class="btn btn-outline-primary ms-2" onclick="window.print()">🖨 In hóa đơn</button>
+        </div>
     </div>
 </div>
-
-
 
 <hr />
-<div class="container mt-4">
-    <div class="card shadow-sm rounded-3">
-        <div class="card-body">
-            <h3 class="card-title text-primary fw-bold mb-3">
-                📜 Thông tin đơn hàng
-            </h3>
-            <ul class="list-unstyled fs-5">
-                <li><strong>Ngày tạo hóa đơn:</strong> @Model.Order.OrderDate.ToString("dd/MM/yyyy")</li>
-                <li><strong>Tổng tiền:</strong> @String.Format("{0:N0}",@Model.Order.TotalAmount) VNĐ</li>
-            </ul>
-        </div>
-    </div>
+
+<div id="loading" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Đang tải dữ liệu đơn hàng...</div>
 </div>
 
+<div id="error-message" class="container mt-4"></div>
 
-<div class="container mt-4">
-    <div class="card shadow-sm rounded-3">
-        <div class="card-body">
-            <h3 class="card-title text-primary fw-bold mb-3">
-                👤 Thông tin khách hàng
-            </h3>
-            <ul class="list-unstyled fs-5">
-                <li><strong>ID:</strong> @Model.Customer.CustomerId</li>
-                <li><strong>Tên:</strong> @Model.Customer.FirstName @Model.Customer.LastName</li>
-                <li><strong>Email:</strong> @Model.Customer.Email</li>
-                <li><strong>SĐT:</strong> @Model.Customer.PhoneNumber</li>
-                <li><strong>Địa chỉ:</strong> @Model.Customer.Address</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<div id="order-info" class="container mt-4 d-none"></div>
+<div id="customer-info" class="container mt-4 d-none"></div>
+<div id="pet-info" class="container mt-4 d-none"></div>
+<div id="product-info" class="container mt-4 d-none"></div>
 
-@if (Model.Pet != null)
-{
-    <div class="container mt-4">
-        <div class="card shadow-sm rounded-3">
-            <div class="card-body">
-                <h3 class="card-title text-primary fw-bold mb-3">
-                    🐾 Thông tin thú cưng
-                </h3>
-                <ul class="list-unstyled fs-5">
-                    <li><strong>Ảnh:</strong>
-                        @if (!string.IsNullOrEmpty(@Model.Pet.ImageBase64))
-                        {
-                            <img src="@Model.Pet.ImageBase64" alt="Ảnh thú cưng" width="80" height="80"
-                                style="object-fit:cover; border-radius:8px;" />
-                        }
-                        else
-                        {
-                            <span class="text-muted">Không có ảnh</span>
-                        }
-                    </li>
-                    <li><strong>ID:</strong> @Model.Pet.PetId</li>
-                    <li><strong>Tên:</strong> @Model.Pet.PetName</li>
-                    <li><strong>Loài:</strong> @Model.Pet.PetType</li>
-                    <li><strong>Giống:</strong> @Model.Pet.Breed</li>
-                    <li><strong>Tuổi:</strong> @Model.Pet.Age</li>
-                    <li><strong>Giới tính:</strong> @Model.Pet.Gender</li>
-                    <li><strong>Giá:</strong> @String.Format("{0:N0}",@Model.Pet.Price) VNĐ</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-}
-else
-{
-    <div class="container mt-4">
-        <div class="card shadow-sm rounded-3">
-            <div class="card-body">
-                <h3 class="card-title text-primary fw-bold mb-3">
-                    🐾 Thông tin thú cưng
-                </h3>
-                <ul class="list-unstyled fs-5">
-                    <li class="text-muted">Không có thú cưng nào liên quan đến đơn hàng này.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-}
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+            const loadingEl = document.getElementById("loading");
+            const errorEl = document.getElementById("error-message");
 
-@if (Model.Product != null)
-{
-    <div class="container mt-4">
-        <div class="card shadow-sm rounded-3">
-            <div class="card-body">
-                <h3 class="card-title text-primary fw-bold mb-3">
-                    📦 Thông tin sản phẩm
-                </h3>
-                <ul class="list-unstyled fs-5">
-                    <li><strong>ID:</strong> @Model.Product.ProductId</li>
-                    <li><strong>Tên:</strong> @Model.Product.ProductName</li>
-                    <li><strong>Loại:</strong> @Model.Product.ProductCategory</li>
-                    <li><strong>Giá:</strong> @Model.Product.ProductPrice.ToString("N0") VNĐ</li>
-                    <li><strong>Số lượng:</strong> @Model.Order.ProductQuantity</li>
-                    <li><strong>Tổng tiền sản phẩm:</strong> @String.Format("{0:N0}", Model.Product.ProductPrice *
-                                            Model.Order.ProductQuantity) VNĐ</li>
+            if (!orderId) {
+                loadingEl.style.display = "none";
+                errorEl.innerHTML = `<div class="alert alert-danger">❌ Không tìm thấy ID đơn hàng trên URL.</div>`;
+                return;
+            }
 
-            </ul>
-        </div>
-    </div>
-</div>
-}
-else
-{
-    <div class="container mt-4">
-        <div class="card shadow-sm rounded-3">
-            <div class="card-body">
-                <h3 class="card-title text-primary fw-bold mb-3">
-                    📦 Thông tin sản phẩm
-                </h3>
-                <ul class="list-unstyled fs-5">
-                    <li class="text-muted">Không có sản phẩm nào liên quan đến đơn hàng này.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+            try {
+                const res = await fetch(`/api/orders/${orderId}/detail`);
+                if (!res.ok) throw new Error("Không tìm thấy đơn hàng");
+
+                const data = await res.json();
+
+                if (!data.order || !data.customer) {
+                    throw new Error("Thiếu dữ liệu đơn hàng hoặc khách hàng.");
+                }
+
+                document.getElementById("order-title").innerText = `📦 Chi tiết đơn hàng có ID: ${data.order.orderId}`;
+
+                // 🧾 Order info
+                document.getElementById("order-info").innerHTML = `
+                    <div class="card shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary fw-bold mb-3">📜 Thông tin đơn hàng</h3>
+                            <ul class="list-unstyled fs-5">
+                                <li><strong>Ngày tạo hóa đơn:</strong> ${new Date(data.order.orderDate).toLocaleDateString('vi-VN')}</li>
+                                <li><strong>Tổng tiền:</strong> ${data.order.totalAmount.toLocaleString()} VNĐ</li>
+                            </ul>
+                        </div>
+                    </div>`;
+
+                // 👤 Customer info
+                document.getElementById("customer-info").innerHTML = `
+                    <div class="card shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary fw-bold mb-3">👤 Thông tin khách hàng</h3>
+                            <ul class="list-unstyled fs-5">
+                                <li><strong>ID:</strong> ${data.customer.customerId}</li>
+                                <li><strong>Tên:</strong> ${data.customer.firstName} ${data.customer.lastName}</li>
+                                <li><strong>Email:</strong> ${data.customer.email}</li>
+                                <li><strong>SĐT:</strong> ${data.customer.phoneNumber}</li>
+                                <li><strong>Địa chỉ:</strong> ${data.customer.address}</li>
+                            </ul>
+                        </div>
+                    </div>`;
+
+                // 🐾 Pet info
+                const pet = data.pet;
+                document.getElementById("pet-info").innerHTML = `
+                    <div class="card shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary fw-bold mb-3">🐾 Thông tin thú cưng</h3>
+                            ${pet ? `
+                            <ul class="list-unstyled fs-5">
+                                <li><strong>Ảnh:</strong> ${pet.imageBase64 ? `<img src="${pet.imageBase64}" width="80" height="80" style="object-fit:cover; border-radius:8px;" />` : '<span class="text-muted">Không có ảnh</span>'}</li>
+                                <li><strong>ID:</strong> ${pet.petId}</li>
+                                <li><strong>Tên:</strong> ${pet.petName}</li>
+                                <li><strong>Loài:</strong> ${pet.petType}</li>
+                                <li><strong>Giống:</strong> ${pet.breed}</li>
+                                <li><strong>Tuổi:</strong> ${pet.age}</li>
+                                <li><strong>Giới tính:</strong> ${pet.gender}</li>
+                                <li><strong>Giá:</strong> ${pet.price.toLocaleString()} VNĐ</li>
+                            </ul>` : `<ul class="list-unstyled fs-5"><li class="text-muted">Không có thú cưng nào liên quan đến đơn hàng này.</li></ul>`}
+                        </div>
+                    </div>`;
+
+                // 📦 Product info
+                const product = data.product;
+                document.getElementById("product-info").innerHTML = `
+                    <div class="card shadow-sm rounded-3">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary fw-bold mb-3">📦 Thông tin sản phẩm</h3>
+                            ${product ? `
+                            <ul class="list-unstyled fs-5">
+                                <li><strong>ID:</strong> ${product.productId}</li>
+                                <li><strong>Tên:</strong> ${product.productName}</li>
+                                <li><strong>Loại:</strong> ${product.productCategory}</li>
+                                <li><strong>Giá:</strong> ${product.productPrice.toLocaleString()} VNĐ</li>
+                                <li><strong>Số lượng:</strong> ${data.order.productQuantity}</li>
+                                <li><strong>Tổng tiền sản phẩm:</strong> ${(product.productPrice * data.order.productQuantity).toLocaleString()} VNĐ</li>
+                            </ul>` : `<ul class="list-unstyled fs-5"><li class="text-muted">Không có sản phẩm nào liên quan đến đơn hàng này.</li></ul>`}
+                        </div>
+                    </div>`;
+
+                // Hiển thị nội dung
+                loadingEl.style.display = "none";
+                document.getElementById("order-info").classList.remove("d-none");
+                document.getElementById("customer-info").classList.remove("d-none");
+                document.getElementById("pet-info").classList.remove("d-none");
+                document.getElementById("product-info").classList.remove("d-none");
+
+            } catch (error) {
+                console.error(error);
+                loadingEl.style.display = "none";
+                errorEl.innerHTML = `<div class="alert alert-danger">❌ ${error.message}</div>`;
+            }
+        });
+    </script>
 }

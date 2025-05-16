@@ -1,73 +1,271 @@
-@model CustomerPetListViewModel
-
 <h2>Trang quản lý thông tin dịch vụ</h2>
 
-<input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên khách hàng, thú cưng, tên dịch vụ hoặc id,..." />
+<div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+    <input type="text" id="searchBox" class="form-control"
+        placeholder="Tìm theo tên thú cưng, tên khách hàng, tên dịch vụ,..." />
+    <button class="btn btn-success" onclick="openAddForm()">Thêm thông tin dịch vụ mới</button>
+</div>
+
+<h2>Danh sách thông tin dịch vụ</h2>
 <div class="row align-items-center mb-3">
-    <!-- Checkbox -->
-    <div class="col-12 col-md-4 mb-3 mb-md-0">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
-            <label class="form-check-label text-success" for="onlyAvailableCheckbox">
-                Chỉ hiện trạng thái hoàn thành ✅
-            </label>
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Checkbox bên trái -->
+            <div class="form-check m-0">
+                <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
+                <label class="form-check-label text-success" for="onlyAvailableCheckbox">
+                    Chỉ hiện trạng thái hoàn thành ✅
+                </label>
+            </div>
+
+            <!-- Nút "Lọc" bên phải -->
+            <button class="btn btn-primary" id="filterButton">Lọc</button>
         </div>
     </div>
 </div>
-<div id="customerpetListContainer">
-    @await Html.PartialAsync("_CustomerPetListPartial.cshtml", Model)
+
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Customer Pet ID</th>
+                <th>Customer ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Pet Name</th>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="customerpet-body">
+            <tr>
+                <td colspan="9">⏳ Đang tải danh sách...</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
+<div class="d-flex justify-content-end mt-2" id="pagination"></div>
 
+
+<!-- Modal Thêm/Sửa -->
+<div id="customerpetModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="customerpetForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Khách hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="customerPetId" />
+                    <!-- Customer -->
+                    <div class="mb-2">
+                        <select class="form-select" id="customerSelect" required></select>
+                    </div>
+                    <div class="mb-2"><input type="text" class="form-control" id="petName" placeholder="Pet Name"
+                            required /></div>
+                    <!-- Product -->
+                    <div class="mb-2">
+                        <select class="form-select" id="productSelect" required></select>
+                    </div>
+                    <div class="mb-2"><input type="text" class="form-control" id="status" placeholder="Status"
+                            required />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function loadCustomerPets(keyword = "", page = 1) {
-            const onlyAvailable = $('#onlyAvailableCheckbox').is(':checked');
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-            $.ajax({
-                url: '/CustomerPet/LoadCustomerPetPartial',
-                data: {
-                    keyword: keyword,
-                    page: page,
-                    onlyAvailable: onlyAvailable
-                },
-                success: function (data) {
-                    $('#customerpetListContainer').html(data);
+    <script>
+        let currentPage = 1;
+        const modal = new bootstrap.Modal(document.getElementById('customerpetModal'));
+
+        function loadCustomerPets(keyword = "", page = 1) {
+            currentPage = page;
+            const onlyAvailable = $('#onlyAvailableCheckbox').is(':checked');
+            let apiUrl = `/api/customer-pets/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+            if (onlyAvailable) apiUrl += `&onlyAvailable=true`;
+            $("#customerpet-body").html('<tr><td colspan="9">⏳ Đang tải...</td></tr>');
+
+            $.get(apiUrl, function (data) {
+                const tbody = $("#customerpet-body");
+                tbody.empty();
+
+                if (data.data.length === 0) {
+                    tbody.append(`<tr><td colspan="9" class="text-danger">Không có thông tin. <a href="/Dvdanglam" class="btn btn-secondary ms-2">↩️ Quay lại</a></td></tr>`);
+                    $("#pagination").empty();
+                    return;
+                }
+
+                data.data.forEach(cp => {
+                    tbody.append(`
+                                <tr>
+                                    <td>${cp.customerPetId}</td>
+                                    <td>${cp.customerId}</td>
+                                    <td>${cp.firstName}</td>
+                                    <td>${cp.lastName}</td>
+                                    <td>${cp.petName}</td>
+                                    <td>${cp.productId}</td>
+                                    <td>${cp.productName}</td>
+                                    <td>${cp.status}</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="openEditForm(${cp.customerPetId})">✏️ Sửa</button>
+                                        <button class="btn btn-danger btn-sm" onclick="deleteCustomerPet(${cp.customerPetId})">❌ Xóa</button>
+                                        <button class="btn btn-info btn-sm" onclick="toggleStatus(${cp.customerPetId})">🔄 Đổi trạng thái</button>
+                                    </td>
+                                </tr>`);
+                });
+
+                renderPagination(data.currentPage || data.CurrentPage, data.totalPages || data.TotalPages);
+            });
+        }
+
+        function renderPagination(current, total) {
+            const container = $("#pagination");
+            container.empty();
+            for (let i = 1; i <= total; i++) {
+                const btn = `<button onclick="loadCustomerPets($('#searchBox').val(), ${i})"
+                                                        class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1">${i}</button>`;
+                container.append(btn);
+            }
+        }
+        function loadDropdowns(selectedCustomerId = null, selectedProductId = null) {
+            $.get("/api/customers/list", function (data) {
+                const customerSelect = $("#customerSelect");
+                customerSelect.empty();
+                customerSelect.append('<option disabled selected value="">-- Chọn khách hàng --</option>');
+                data.forEach(c => {
+                    const selected = c.customerId === selectedCustomerId ? "selected" : "";
+                    customerSelect.append(`<option value="${c.customerId}" ${selected}>${c.fullName}</option>`);
+                });
+            });
+
+            $.get("/api/products/services", function (data) {
+                const productSelect = $("#productSelect");
+                productSelect.empty();
+                productSelect.append('<option disabled selected value="">-- Chọn dịch vụ --</option>');
+                data.forEach(p => {
+                    const selected = p.productId === selectedProductId ? "selected" : "";
+                    productSelect.append(`<option value="${p.productId}" ${selected}>${p.name}</option>`);
+                });
+            });
+        }
+
+
+        function openAddForm() {
+            $("#modalTitle").text("🙋 Thêm khách hàng mới");
+            $("#customerpetForm")[0].reset();
+            $("#customerPetId").val('');
+            loadDropdowns(); // Load dropdown rỗng
+            modal.show();
+        }
+
+
+        function openEditForm(id) {
+            $.get(`/api/customer-pets/${id}`, function (data) {
+                $("#modalTitle").text("👨‍🔧 Sửa thông tin dịch vụ");
+                $("#customerPetId").val(data.customerPetId);
+                loadDropdowns(data.customerId, data.productId); // Load dropdown có selected
+                $("#petName").val(data.petName);
+                $("#status").val(data.status);
+                modal.show();
+            });
+        }
+
+
+        $("#customerpetForm").on("submit", function (e) {
+            e.preventDefault();
+
+            const id = $("#customerPetId").val();
+            const method = id ? "PUT" : "POST";
+            const url = id ? `/api/customer-pets/${id}` : `/api/customer-pets`;
+
+            const customerpet = {
+                customerId: parseInt($("#customerSelect").val()),
+                productId: parseInt($("#productSelect").val()),
+                petName: $("#petName").val(),
+                status: $("#status").val()
+            };
+
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(customerpet)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    modal.hide();
+                    Swal.fire("✅ Thành công", data.message || "Thành công", "success");
+                    loadCustomerPets($("#searchBox").val(), currentPage);
+                })
+                .catch(err => Swal.fire("❌ Lỗi", "Không thể lưu thông tin", "error"));
+        });
+
+        function deleteCustomerPet(id) {
+            Swal.fire({
+                title: 'Bạn chắc chắn muốn xóa?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/customer-pets/${id}`, { method: 'DELETE' })
+                        .then(res => res.json())
+                        .then(data => {
+                            Swal.fire("✅ Đã xóa", data.message, "success");
+                            loadCustomerPets($("#searchBox").val(), currentPage);
+                        })
+                        .catch(() => Swal.fire("❌ Lỗi", "Không thể xóa", "error"));
                 }
             });
         }
 
         $(document).ready(function () {
-            $('#searchBox').on('input', function () {
-                const keyword = $(this).val();
-                loadCustomerPets(keyword, 1);
-            });
+            loadCustomerPets();
 
-            $('#onlyAvailableCheckbox').on('change', function () {
-                const keyword = $('#searchBox').val();
-                loadCustomerPets(keyword, 1);
+            $("#searchBox").on("input", function () {
+                loadCustomerPets($(this).val(), 1);
             });
-
-            $(document).on('click', '.page-link', function (e) {
-                e.preventDefault();
-                const page = $(this).data('page');
-                const keyword = $('#searchBox').val();
-                loadCustomerPets(keyword, page);
-            });
-
-            @if (TempData["Success"] != null)
-            {
-                <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công!',
-                        text: '@TempData["Success"]',
-                        confirmButtonText: 'OK'
-                    });
-                </text>
-            }
         });
+        // Lọc
+        $("#filterButton").on("click", function () {
+            loadCustomerPets($("#searchBox").val(), 1);
+        });
+
+
+        function toggleStatus(id) {
+            fetch("/api/customer-pets/toggle-status", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(id)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire("✅ Thành công", `Trạng thái mới của tt dịch vụ có ID: ${data.id} là ${data.newStatus}`, "success");
+                        loadCustomerPets($("#searchBox").val(), currentPage);
+                    } else {
+                        Swal.fire("❌ Lỗi", data.message || "Không thể đổi trạng thái", "error");
+                    }
+                })
+                .catch(() => Swal.fire("❌ Lỗi", "Không thể kết nối máy chủ", "error"));
+        }
+
     </script>
 }
-

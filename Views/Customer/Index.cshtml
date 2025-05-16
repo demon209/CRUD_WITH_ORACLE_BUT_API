@@ -1,52 +1,190 @@
-﻿@model CustomerListViewModel
+﻿<h2 class="mb-4">📋 Trang quản lý khách hàng</h2>
 
-<h2>Trang quản lý khách hàng</h2>
-
-<input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên, số điện thoại hoặc email khách hàng..." />
-
-<div id="customerListContainer">
-    @await Html.PartialAsync("_CustomerListPartial.cshtml", Model)
+<div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+    <input type="text" id="searchBox" class="form-control" placeholder="🔍 Tìm theo tên, số điện thoại hoặc email..." />
+    <button class="btn btn-success" onclick="openAddForm()">🙋 Thêm khách hàng mới</button>
 </div>
 
+<h2>Danh sách khách hàng</h2>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Customer ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody id="customer-body">
+            <tr><td colspan="7">⏳ Đang tải danh sách...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-end mt-2" id="pagination"></div>
+
+<!-- Modal Thêm/Sửa -->
+<div id="customerModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="customerForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Khách hàng</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="customerId" />
+          <div class="mb-2"><input type="text" class="form-control" id="firstName" placeholder="First Name" required /></div>
+          <div class="mb-2"><input type="text" class="form-control" id="lastName" placeholder="Last Name" required /></div>
+          <div class="mb-2"><input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number" required /></div>
+          <div class="mb-2"><input type="email" class="form-control" id="email" placeholder="Email" required /></div>
+          <div class="mb-2"><input type="text" class="form-control" id="address" placeholder="Address" required /></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">💾 Lưu</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function loadCustomers(keyword = "", page = 1) {
-            $.ajax({
-                url: '/Customer/LoadCustomerPartial',
-                data: { keyword: keyword, page: page },
-                success: function (data) {
-                    $('#customerListContainer').html(data);
-                }
-            });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+let currentPage = 1;
+const modal = new bootstrap.Modal(document.getElementById('customerModal'));
+
+function loadCustomers(keyword = "", page = 1) {
+    currentPage = page;
+    const apiUrl = keyword.trim() === ""
+        ? `/api/customers?page=${page}`
+        : `/api/customers/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+
+    $("#customer-body").html('<tr><td colspan="7">⏳ Đang tải...</td></tr>');
+
+    $.get(apiUrl, function (data) {
+        const tbody = $("#customer-body");
+        tbody.empty();
+
+        if (data.data.length === 0) {
+            tbody.append(`<tr><td colspan="7" class="text-danger">Không có khách hàng.</td></tr>`);
+            $("#pagination").empty();
+            return;
         }
 
-        $(document).ready(function () {
-            $('#searchBox').on('input', function () {
-                const keyword = $(this).val();
-                loadCustomers(keyword, 1); // reset về trang 1 khi tìm
-            });
-
-            // Sự kiện click phân trang
-            $(document).on('click', '.page-link', function (e) {
-                e.preventDefault();
-                const page = $(this).data('page');
-                const keyword = $('#searchBox').val();
-                loadCustomers(keyword, page);
-            });
-                        // SweetAlert nếu có TempData
-            @if (TempData["Success"] != null)
-            {
-                <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công!',
-                        text: '@TempData["Success"]',
-                        confirmButtonText: 'OK'
-                    });
-                </text>
-            }
+        data.data.forEach(c => {
+            tbody.append(`
+                <tr>
+                    <td>${c.customerId}</td>
+                    <td>${c.firstName}</td>
+                    <td>${c.lastName}</td>
+                    <td>${c.phoneNumber}</td>
+                    <td>${c.email}</td>
+                    <td>${c.address}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="openEditForm(${c.customerId})">✏️ Sửa</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${c.customerId})">❌ Xóa</button>
+                    </td>
+                </tr>`);
         });
-    </script>
+
+        renderPagination(data.currentPage, data.totalPages);
+    });
+}
+
+function renderPagination(current, total) {
+    const container = $("#pagination");
+    container.empty();
+    for (let i = 1; i <= total; i++) {
+        const btn = `<button onclick="loadCustomers($('#searchBox').val(), ${i})"
+            class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1">${i}</button>`;
+        container.append(btn);
+    }
+}
+
+function openAddForm() {
+    $("#modalTitle").text("🙋 Thêm khách hàng mới");
+    $("#customerForm")[0].reset();
+    $("#customerId").val('');
+    modal.show();
+}
+
+function openEditForm(id) {
+    $.get(`/api/customers/${id}`, function (data) {
+        $("#modalTitle").text("👨‍🔧 Sửa khách hàng");
+        $("#customerId").val(data.customerId);
+        $("#firstName").val(data.firstName);
+        $("#lastName").val(data.lastName);
+        $("#phoneNumber").val(data.phoneNumber);
+        $("#email").val(data.email);
+        $("#address").val(data.address);
+        modal.show();
+    });
+}
+
+$("#customerForm").on("submit", function (e) {
+    e.preventDefault();
+
+    const id = $("#customerId").val();
+    const method = id ? "PUT" : "POST";
+    const url = id ? `/api/customers/${id}` : `/api/customers`;
+
+    const customer = {
+        firstName: $("#firstName").val(),
+        lastName: $("#lastName").val(),
+        phoneNumber: $("#phoneNumber").val(),
+        email: $("#email").val(),
+        address: $("#address").val()
+    };
+
+    fetch(url, {
+        method: method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(customer)
+    })
+    .then(res => res.json())
+    .then(data => {
+        modal.hide();
+        Swal.fire("✅ Thành công", data.message || "Thành công", "success");
+        loadCustomers($("#searchBox").val(), currentPage);
+    })
+    .catch(err => Swal.fire("❌ Lỗi", "Không thể lưu khách hàng", "error"));
+});
+
+function deleteCustomer(id) {
+    Swal.fire({
+        title: 'Bạn chắc chắn muốn xóa?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/api/customers/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    Swal.fire("✅ Đã xóa", data.message, "success");
+                    loadCustomers($("#searchBox").val(), currentPage);
+                })
+                .catch(() => Swal.fire("❌ Lỗi", "Không thể xóa", "error"));
+        }
+    });
+}
+
+$(document).ready(function () {
+    loadCustomers();
+
+    $("#searchBox").on("input", function () {
+        loadCustomers($(this).val(), 1);
+    });
+});
+</script>
 }

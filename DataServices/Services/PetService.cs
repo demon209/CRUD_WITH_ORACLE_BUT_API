@@ -71,6 +71,12 @@ namespace MVC.Services
         {
             try
             {
+                if (imageData == null || imageData.Length == 0)
+                {
+                    // Gán thẳng ảnh mặc định
+                    imageData = File.ReadAllBytes("wwwroot/image/notfound.png");
+                }
+
                 using var conn = new OracleConnection(_connectionString);
                 conn.Open();
 
@@ -85,7 +91,7 @@ namespace MVC.Services
                 cmd.Parameters.Add("p_age", OracleDbType.Int32).Value = pet.Age;
                 cmd.Parameters.Add("p_gender", OracleDbType.Varchar2).Value = pet.Gender ?? "";
                 cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = pet.Price;
-                cmd.Parameters.Add("p_image", OracleDbType.Blob).Value = imageData ?? new byte[0];
+                cmd.Parameters.Add("p_image", OracleDbType.Blob).Value = imageData;
                 cmd.Parameters.Add("p_message", OracleDbType.Varchar2, 4000).Direction = ParameterDirection.Output;
 
                 cmd.ExecuteNonQuery();
@@ -96,6 +102,7 @@ namespace MVC.Services
                 return "ERROR: " + ex.Message;
             }
         }
+
 
         public string Update(Pet pet, byte[] imageData)
         {
@@ -114,7 +121,7 @@ namespace MVC.Services
             cmd.Parameters.Add("p_age", OracleDbType.Int32).Value = pet.Age;
             cmd.Parameters.Add("p_gender", OracleDbType.Varchar2).Value = pet.Gender;
             cmd.Parameters.Add("p_price", OracleDbType.Decimal).Value = pet.Price;
-            cmd.Parameters.Add("p_status", OracleDbType.Varchar2).Value = "Còn thú cưng";
+            cmd.Parameters.Add("p_status", OracleDbType.Varchar2).Value = pet.Status;
 
             if (imageData == null || imageData.Length == 0)
                 cmd.Parameters.Add("p_image", OracleDbType.Blob).Value = DBNull.Value;

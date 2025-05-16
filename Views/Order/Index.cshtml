@@ -1,57 +1,251 @@
-@model OrderListViewModel
-
 <h2>Trang quản lý hóa đơn</h2>
 
-<div class="d-flex align-items-center mb-3" style="width: 350px;">
-    <label for="searchBox" class="me-2 mb-0">Tìm kiếm theo ngày:</label>
-    <input type="date" id="searchBox" class="form-control" style="width: 180px;" />
+<div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+<input type="date" id="searchBox" class="form-control" placeholder="Tìm theo ngày..." />
+<button class="btn btn-success" onclick="openAddForm()">➕ Thêm hóa đơn</button>
 </div>
 
+<h2>Danh sách hóa đơn</h2>
 
-
-<div id="orderListContainer">
-    @await Html.PartialAsync("_OrderListPartial.cshtml", Model)
+<div class="table-responsive">
+<table class="table table-striped table-bordered align-middle text-center">
+    <thead class="table-light">
+        <tr>
+            <th>Order ID</th>
+            <th>Customer ID</th>
+            <th>Pet ID</th>
+            <th>Product ID</th>
+            <th>Số lượng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody id="orders-body">
+        <tr>
+            <td colspan="8">⏳ Đang tải danh sách...</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 
+<div class="d-flex justify-content-end mt-2" id="pagination"></div>
 
+<!-- Modal Thêm/Sửa -->
+<div id="orderModal" class="modal fade" tabindex="-1" role="dialog">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form id="orderForm">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Hóa đơn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="orderId" />
+
+                <div class="mb-2">
+                    <label for="customerId" class="form-label">Khách hàng</label>
+                    <select class="form-select" id="customerSelect" required></select>
+                </div>
+
+                <div class="mb-2">
+                    <label for="petId" class="form-label">Thú cưng</label>
+                    <select class="form-select" id="petSelect"></select>
+                </div>
+
+                <div class="mb-2">
+                    <label for="productId" class="form-label">Sản phẩm</label>
+                    <select class="form-select" id="productSelect"></select>
+                </div>
+
+                <div class="mb-2">
+                    <label for="quantity" class="form-label">Số lượng</label>
+                    <input type="number" class="form-control" id="quantity" required />
+                </div>
+
+                <div class="mb-2">
+                    <label for="orderDate" class="form-label">Ngày đặt</label>
+                    <input type="date" class="form-control" id="orderDate" required />
+                </div>
+
+                <div class="mb-2">
+                    <input type="hidden" class="form-control" id="totalAmount" value="0" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<!-- Script xử lý -->
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function loadCustomers(keyword = "", page = 1) {
-            $.ajax({
-                url: '/Order/LoadOrdersPartial',
-                data: { keyword: keyword, page: page },
-                success: function (data) {
-                    $('#orderListContainer').html(data);
-                }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+    let currentPage = 1;
+
+    function loadOrders(keyword = "", page = 1) {
+        currentPage = page;
+        let apiUrl = `/api/orders/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+
+        $("#orders-body").html('<tr><td colspan="8">⏳ Đang tải...</td></tr>');
+
+        $.get(apiUrl, function (data) {
+            const tbody = $("#orders-body");
+            tbody.empty();
+
+            if (data.data.length === 0) {
+                tbody.append(`<tr><td colspan="8" class="text-danger">Không có hóa đơn.</td></tr>`);
+                $("#pagination").empty();
+                return;
+            }
+
+            data.data.forEach(o => {
+                tbody.append(`
+                            <tr>
+                                <td>${o.orderId}</td>
+                                <td>${o.customerId}</td>
+                                <td>${o.petId ?? '-'}</td>
+                                <td>${o.productId ?? '-'}</td>
+                                <td>${o.productQuantity}</td>
+                                <td>${new Date(o.orderDate).toLocaleDateString('en-GB') // 'en-GB' là định dạng dd/mm/yyyy
+                                    .replace(/\//g, '-')  // thay dấu / thành dấu -
+                                }</td>
+                                <td>${o.totalAmount}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="openEditForm(${o.orderId})">✏️ Sửa</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteOrder(${o.orderId})">❌ Xóa</button>
+                                    <a href="/Hoadon/OrderDetail?id=${o.orderId}" class="btn btn-info btn-sm">🔍 Xem chi tiết</a>
+                                </td>
+                            </tr>`);
             });
+
+            renderPagination(data.currentPage, data.totalPages);
+        });
+    }
+
+    function renderPagination(current, total) {
+        const container = $("#pagination");
+        container.empty();
+        for (let i = 1; i <= total; i++) {
+            const btn = `<button onclick="loadOrders($('#searchBox').val(), ${i})"
+                        class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1">${i}</button>`;
+            container.append(btn);
         }
+    }
 
-        $(document).ready(function () {
-            $('#searchBox').on('input', function () {
-                const keyword = $(this).val();
-                loadCustomers(keyword, 1); // reset về trang 1 khi tìm
-            });
+    function openAddForm() {
+        $("#modalTitle").text("➕ Thêm hóa đơn");
+        $("#orderForm")[0].reset();
+        $("#orderId").val('');
+        modal.show();
+    }
 
-            // Sự kiện click phân trang
-            $(document).on('click', '.page-link', function (e) {
-                e.preventDefault();
-                const page = $(this).data('page');
-                const keyword = $('#searchBox').val();
-                loadCustomers(keyword, page);
-            });
-                        // SweetAlert nếu có TempData
-            @if (TempData["Success"] != null)
-            {
-                <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công!',
-                        text: '@TempData["Success"]',
-                        confirmButtonText: 'OK'
-                    });
-                </text>
+    function openEditForm(id) {
+        $.get(`/api/orders/${id}`, function (data) {
+            $("#modalTitle").text("✏️ Sửa hóa đơn");
+            $("#orderId").val(data.orderId);
+            $("#customerSelect").val(data.customerId);
+            $("#petSelect").val(data.petId);
+            $("#productSelect").val(data.productId);
+            $("#quantity").val(data.productQuantity);
+            $("#orderDate").val(data.orderDate.split("T")[0]);
+            $("#totalAmount").val(data.totalAmount);
+            modal.show();
+        });
+    }
+
+    $("#orderForm").on("submit", function (e) {
+        e.preventDefault();
+        const id = $("#orderId").val();
+        const method = id ? "PUT" : "POST";
+        const url = id ? `/api/orders/${id}` : `/api/orders`;
+
+        const order = {
+            customerId: parseInt($("#customerSelect").val()),
+            petId: parseInt($("#petSelect").val()) || null,
+            productId: parseInt($("#productSelect").val()) || null,
+            productQuantity: parseInt($("#quantity").val()),
+            orderDate: $("#orderDate").val(),
+            totalAmount: parseFloat($("#totalAmount").val())
+        };
+
+        fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order)
+        })
+            .then(res => res.json())
+            .then(data => {
+                modal.hide();
+                $("#orderForm")[0].reset();
+                $("#customerSelect").val('');
+                $("#petSelect").val('');
+                $("#productSelect").val('');
+                Swal.fire("✅ Thành công", data.message || "Thành công", "success");
+                loadOrders($("#searchBox").val(), currentPage);
+            })
+            .catch(err => Swal.fire("❌ Lỗi", "Không thể lưu hóa đơn", "error"));
+    });
+
+    function deleteOrder(id) {
+        Swal.fire({
+            title: 'Bạn chắc chắn muốn xóa?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/api/orders/${id}`, { method: 'DELETE' })
+                    .then(res => res.json())
+                    .then(data => {
+                        Swal.fire("✅ Đã xóa", data.message, "success");
+                        loadOrders($("#searchBox").val(), currentPage);
+                    })
+                    .catch(() => Swal.fire("❌ Lỗi", "Không thể xóa", "error"));
             }
         });
-    </script>
+    }
+
+    function loadSelects() {
+        $.get("/api/customers/list", data => {
+            const select = $("#customerSelect");
+            select.empty();
+            data.forEach(c => {
+                select.append(`<option value="${c.customerId}">${c.fullName}</option>`);
+            });
+        });
+
+        $.get("/api/pets/available", data => {
+            const select = $("#petSelect");
+            select.empty().append(`<option value="">(Không chọn)</option>`);
+            data.forEach(p => {
+                select.append(`<option value="${p.petId}">${p.name}</option>`);
+            });
+        });
+
+        $.get("/api/products/list", data => {
+            const select = $("#productSelect");
+            select.empty().append(`<option value="">(Không chọn)</option>`);
+            data.forEach(p => {
+                select.append(`<option value="${p.productId}">${p.name}</option>`);
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        loadOrders();
+        loadSelects();
+        $("#searchBox").on("input", function () {
+            loadOrders($(this).val(), 1);
+        });
+    });
+</script>
 }

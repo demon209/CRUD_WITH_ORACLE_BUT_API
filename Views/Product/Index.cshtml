@@ -1,52 +1,236 @@
-@model ProductListViewModel
-
 <h2>Trang quản lý sản phẩm</h2>
 
-<input type="text" id="searchBox" class="form-control mb-3" placeholder="Tìm kiếm theo tên sản phẩm..." />
-
-<div id="productListContainer">
-    @await Html.PartialAsync("_ProductListPartial.cshtml", Model)
+<div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+    <input type="text" id="searchBox" class="form-control"
+        placeholder="Tìm theo tên sản phẩm, loại sản phẩm hoặc id,.." />
+    <button class="btn btn-success" onclick="openAddForm()">Thêm thông tin sản phẩm mới</button>
 </div>
 
+<h2>Danh sách sản phẩm</h2>
+<div class="row align-items-center mb-3">
+    <div class="col-12 col-md-8 mb-3 mb-md-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Checkbox bên trái -->
+            <div class="form-check m-0">
+                <input class="form-check-input" type="checkbox" value="true" id="onlyAvailableCheckbox">
+                <label class="form-check-label text-success" for="onlyAvailableCheckbox">
+                    Chỉ hiện dịch vụ ✅
+                </label>
+            </div>
+
+            <!-- Nút "Lọc" bên phải -->
+            <button class="btn btn-primary" id="filterButton">Lọc</button>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Product Category</th>
+                <th>Product Price</th>
+                <th>Product Stock</th>
+                <th>Product Type</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="product-body">
+            <tr>
+                <td colspan="7">⏳ Đang tải danh sách...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-end mt-2" id="pagination"></div>
+
+<!-- Modal Thêm/Sửa -->
+<div id="productModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="productForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Sản phẩm</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="productId" />
+
+                    <div class="mb-2">
+                        <label for="productName" class="form-label">Tên sản phẩm</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm"
+                            required />
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="productCategory" class="form-label">Danh mục sản phẩm</label>
+                        <input type="text" class="form-control" id="productCategory" placeholder="Nhập danh mục"
+                            required />
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="productPrice" class="form-label">Giá sản phẩm</label>
+                        <input type="number" class="form-control" id="productPrice" placeholder="Nhập giá" required />
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="productStock" class="form-label">Tồn kho</label>
+                        <input type="number" class="form-control" id="productStock" placeholder="Số lượng tồn kho"
+                            required />
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="productType" class="form-label">Loại sản phẩm</label>
+                        <input type="text" class="form-control" id="productType" placeholder="Nhập loại sản phẩm"
+                            required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
+        let currentPage = 1;
+        const modal = new bootstrap.Modal(document.getElementById('productModal'));
+
         function loadProducts(keyword = "", page = 1) {
-            $.ajax({
-                url: '/Product/LoadProductsPartial',
-                data: { keyword: keyword, page: page },
-                success: function (data) {
-                    $('#productListContainer').html(data);
+            currentPage = page;
+            const onlyAvailable = $('#onlyAvailableCheckbox').is(':checked');
+            let apiUrl = `/api/products/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+            if (onlyAvailable) apiUrl += `&onlyAvailable=true`;
+            $("#product-body").html('<tr><td colspan="7">⏳ Đang tải...</td></tr>');
+
+            $.get(apiUrl, function (data) {
+                const tbody = $("#product-body");
+                tbody.empty();
+
+                if (data.data.length === 0) {
+                    tbody.append(`<tr><td colspan="7" class="text-danger">Không có sản phẩm.</td></tr>`);
+                    $("#pagination").empty();
+                    return;
+                }
+
+                data.data.forEach(c => {
+                    tbody.append(`
+                        <tr>
+                            <td>${c.productId}</td>
+                            <td>${c.productName}</td>
+                            <td>${c.productCategory}</td>
+                            <td>${c.productPrice}</td>
+                            <td>${c.productStock}</td>
+                            <td>${c.productType}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="openEditForm(${c.productId})">✏️ Sửa</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${c.productId})">❌ Xóa</button>
+                            </td>
+                        </tr>`);
+                });
+
+                renderPagination(data.currentPage, data.totalPages);
+            });
+        }
+
+        function renderPagination(current, total) {
+            const container = $("#pagination");
+            container.empty();
+            for (let i = 1; i <= total; i++) {
+                const btn = `<button onclick="loadProducts($('#searchBox').val(), ${i})"
+                    class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1">${i}</button>`;
+                container.append(btn);
+            }
+        }
+
+        function openAddForm() {
+            $("#modalTitle").text("🙋 Thêm sản phẩm mới");
+            $("#productForm")[0].reset();
+            $("#productId").val('');
+            modal.show();
+        }
+
+        function openEditForm(id) {
+            $.get(`/api/products/${id}`, function (data) {
+                $("#modalTitle").text("👨‍🔧 Sửa sản phẩm");
+                $("#productId").val(data.productId);
+                $("#productName").val(data.productName);
+                $("#productCategory").val(data.productCategory);
+                $("#productPrice").val(data.productPrice);
+                $("#productStock").val(data.productStock);
+                $("#productType").val(data.productType);
+                modal.show();
+            });
+        }
+
+        $("#productForm").on("submit", function (e) {
+            e.preventDefault();
+
+            const id = $("#productId").val();
+            const method = id ? "PUT" : "POST";
+            const url = id ? `/api/products/${id}` : `/api/products`;
+
+            const product = {
+                productName: $("#productName").val(),
+                productCategory: $("#productCategory").val(),
+                productPrice: $("#productPrice").val(),
+                productStock: $("#productStock").val(),
+                productType: $("#productType").val()
+            };
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(product)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    modal.hide();
+                    Swal.fire("✅ Thành công", data.message || "Thành công", "success");
+                    loadProducts($("#searchBox").val(), currentPage);
+                })
+                .catch(err => Swal.fire("❌ Lỗi", "Không thể lưu sản phẩm", "error"));
+        });
+
+        function deleteProduct(id) {
+            Swal.fire({
+                title: 'Bạn chắc chắn muốn xóa?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/products/${id}`, { method: 'DELETE' })
+                        .then(res => res.json())
+                        .then(data => {
+                            Swal.fire("✅ Đã xóa", data.message, "success");
+                            loadProducts($("#searchBox").val(), currentPage);
+                        })
+                        .catch(() => Swal.fire("❌ Lỗi", "Không thể xóa", "error"));
                 }
             });
         }
 
         $(document).ready(function () {
-            $('#searchBox').on('input', function () {
-                const keyword = $(this).val();
-                loadProducts(keyword, 1); // reset về trang 1 khi tìm
-            });
+            loadProducts();
 
-            // Sự kiện click phân trang
-            $(document).on('click', '.page-link', function (e) {
-                e.preventDefault();
-                const page = $(this).data('page');
-                const keyword = $('#searchBox').val();
-                loadProducts(keyword, page);
+            $("#searchBox").on("input", function () {
+                loadProducts($(this).val(), 1);
             });
-                        // SweetAlert nếu có TempData
-            @if (TempData["Success"] != null)
-            {
-                <text>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công!',
-                        text: '@TempData["Success"]',
-                        confirmButtonText: 'OK'
-                    });
-                </text>
-            }
+            $("#filterButton").on("click", function () {
+                loadProducts($("#searchBox").val(), 1);
+            });
         });
     </script>
 }
