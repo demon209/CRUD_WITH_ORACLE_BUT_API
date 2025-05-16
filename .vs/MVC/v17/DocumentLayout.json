@@ -1,58 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\",
+  "WorkspaceRootPath": "D:\\Workspace\\InternInFPTS\\Clone\\CRUD_WITH_ORACLE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\product\\_productlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\product\\_productlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\customer\\_customerlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\customer\\_customerlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\order\\_orderlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\order\\_orderlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\pet\\_petlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\pet\\_petlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\interninfpts\\clone\\crud_with_oracle\\database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
       "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\product\\createproducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\product\\createproducts.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\order\\createorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\order\\createorders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\customer\\createcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\customer\\createcustomers.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\views\\pet\\createpets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:views\\pet\\createpets.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\petcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\learnc#(dotnet)\\mvc\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|d:\\workspace\\interninfpts\\clone\\crud_with_oracle\\database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{1EC072F4-C76B-6B7E-C2E7-7D69BB09ACD2}|MVC.csproj|solutionrelative:database\\quanlythucung.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
     }
   ],
   "DocumentGroupContainers": [
@@ -62,163 +18,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_CustomerListPartial.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\_CustomerListPartial.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\_CustomerListPartial.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\_CustomerListPartial.cshtml",
-              "RelativeToolTip": "Views\\Customer\\_CustomerListPartial.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:50.131Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "_ProductListPartial.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\_ProductListPartial.cshtml",
-              "RelativeDocumentMoniker": "Views\\Product\\_ProductListPartial.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\_ProductListPartial.cshtml",
-              "RelativeToolTip": "Views\\Product\\_ProductListPartial.cshtml",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:39.142Z",
+              "Title": "Quanlythucung.sql ",
+              "DocumentMoniker": "D:\\Workspace\\InternInFPTS\\Clone\\CRUD_WITH_ORACLE\\Database\\Quanlythucung.sql",
+              "RelativeDocumentMoniker": "Database\\Quanlythucung.sql",
+              "ToolTip": "D:\\Workspace\\InternInFPTS\\Clone\\CRUD_WITH_ORACLE\\Database\\Quanlythucung.sql",
+              "RelativeToolTip": "Database\\Quanlythucung.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-05-16T09:24:06.71Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_OrderListPartial.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\_OrderListPartial.cshtml",
-              "RelativeDocumentMoniker": "Views\\Order\\_OrderListPartial.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\_OrderListPartial.cshtml",
-              "RelativeToolTip": "Views\\Order\\_OrderListPartial.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:34.315Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "_PetListPartial.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\_PetListPartial.cshtml",
-              "RelativeDocumentMoniker": "Views\\Pet\\_PetListPartial.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\_PetListPartial.cshtml",
-              "RelativeToolTip": "Views\\Pet\\_PetListPartial.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:48:27.865Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Quanlythucung.sql",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql",
-              "RelativeDocumentMoniker": "Database\\Quanlythucung.sql",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Database\\Quanlythucung.sql",
-              "RelativeToolTip": "Database\\Quanlythucung.sql",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-06T07:46:48.371Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CreateProducts.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\CreateProducts.cshtml",
-              "RelativeDocumentMoniker": "Views\\Product\\CreateProducts.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Product\\CreateProducts.cshtml",
-              "RelativeToolTip": "Views\\Product\\CreateProducts.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:18:26.483Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CreateOrders.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\CreateOrders.cshtml",
-              "RelativeDocumentMoniker": "Views\\Order\\CreateOrders.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Order\\CreateOrders.cshtml",
-              "RelativeToolTip": "Views\\Order\\CreateOrders.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:18:08.802Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CreateCustomers.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\CreateCustomers.cshtml",
-              "RelativeDocumentMoniker": "Views\\Customer\\CreateCustomers.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Customer\\CreateCustomers.cshtml",
-              "RelativeToolTip": "Views\\Customer\\CreateCustomers.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAA+AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T07:17:58.523Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "OrderController.cs",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\OrderController.cs",
-              "RelativeDocumentMoniker": "Controllers\\OrderController.cs",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\OrderController.cs",
-              "RelativeToolTip": "Controllers\\OrderController.cs",
-              "ViewState": "AgIAAKAAAAAAAAAAAAAkwLIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T07:17:25.996Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "ProductController.cs",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\ProductController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ProductController.cs",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\ProductController.cs",
-              "RelativeToolTip": "Controllers\\ProductController.cs",
-              "ViewState": "AgIAAK4AAAAAAAAAAAAowL0AAABGAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T07:17:00.077Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "CreatePets.cshtml",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\CreatePets.cshtml",
-              "RelativeDocumentMoniker": "Views\\Pet\\CreatePets.cshtml",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Views\\Pet\\CreatePets.cshtml",
-              "RelativeToolTip": "Views\\Pet\\CreatePets.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-05-06T06:58:58.715Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "PetController.cs",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\PetController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PetController.cs",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\PetController.cs",
-              "RelativeToolTip": "Controllers\\PetController.cs",
-              "ViewState": "AgIAAM8AAAAAAAAAAAAowMYAAABWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T06:57:58.563Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "CustomerController.cs",
-              "DocumentMoniker": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\CustomerController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CustomerController.cs",
-              "ToolTip": "D:\\Workspace\\LearnC#(Dotnet)\\MVC\\Controllers\\CustomerController.cs",
-              "RelativeToolTip": "Controllers\\CustomerController.cs",
-              "ViewState": "AgIAALQAAAAAAAAAAAAowMMAAAA/AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T06:56:45.074Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             }
           ]
         }

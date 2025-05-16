@@ -58,6 +58,7 @@ CREATE TABLE product (
     price DECIMAL(10,2),
     stock INT
 );
+ALTER TABLE product ADD product_type VARCHAR2(20); -- 'product' hoặc 'service'
 
 CREATE OR REPLACE TRIGGER trg_product_id
 BEFORE INSERT ON product
@@ -91,17 +92,53 @@ BEGIN
 END;
 /
 
--- TABLE CUSTOMER_PET
-CREATE TABLE customer_pet (
-    customer_pet_id INT PRIMARY KEY,
-    customer_id INT,
-    pet_name nvarchar2(300),
-    purchase_date DATE,
-    price_at_purchase DECIMAL(10,2), -- PRICE
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
-);
+
+
 CREATE SEQUENCE seq_customer_pet START WITH 1 INCREMENT BY 1;
 
+CREATE TABLE customer_pet (
+    customer_pet_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    pet_name VARCHAR2(100) NOT NULL,
+    product_id INT NOT NULL,
+    product_name VARCHAR2(255),
+    status NVARCHAR2(200) DEFAULT 'Đang thực hiện',
+
+    CONSTRAINT fk_customer
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+
+    CONSTRAINT fk_product
+        FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+ALTER TABLE customer_pet
+ADD (first_name VARCHAR2(100),
+     last_name VARCHAR2(100));
+
+
+CREATE OR REPLACE TRIGGER trg_auto_fill_customer_pet
+BEFORE INSERT ON customer_pet
+FOR EACH ROW
+DECLARE
+    v_first_name customer.first_name%TYPE;
+    v_last_name  customer.last_name%TYPE;
+    v_product_name  product.product_name%TYPE;
+BEGIN
+    -- Lấy first name và last name từ bảng customer
+    SELECT first_name, last_name INTO v_first_name, v_last_name
+    FROM customer
+    WHERE customer_id = :NEW.customer_id;
+
+    -- Lấy tên sản phẩm từ bảng product
+    SELECT product_name INTO v_product_name
+    FROM product
+    WHERE product_id = :NEW.product_id;
+
+    -- Gán vào bản ghi mới
+    :NEW.first_name := v_first_name;
+    :NEW.last_name := v_last_name;
+    :NEW.product_name := v_product_name;
+END;
+/
 CREATE OR REPLACE TRIGGER trg_customer_pet_id
 BEFORE INSERT ON customer_pet
 FOR EACH ROW
@@ -109,12 +146,6 @@ BEGIN
     :NEW.customer_pet_id := seq_customer_pet.NEXTVAL;
 END;
 /
-
-
-
-
-
-
 
 
 
@@ -311,37 +342,44 @@ COMMIT;
 
 
 
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Food', 'Food', 15.99, 100);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Toy', 'Toys', 9.99, 150);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Collar', 'Accessories', 5.50, 80);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Cage', 'Cages', 50.00, 30);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Tank', 'Aquarium', 120.00, 25);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Leash', 'Accessories', 7.99, 100);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Litter', 'Litter', 20.00, 200);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Shampoo', 'Grooming', 8.99, 120);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Bed', 'Furniture', 30.00, 60);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Food', 'Food', 12.50, 180);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Hamster Wheel', 'Toys', 5.99, 200);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Reptile Heat Lamp', 'Reptile', 25.00, 50);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Bowl', 'Accessories', 3.50, 200);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Carrier', 'Accessories', 45.00, 75);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Food', 'Food', 10.00, 150);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Scratching Post', 'Furniture', 22.50, 85);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Rabbit Hutch', 'Cages', 60.00, 40);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Sweater', 'Clothing', 15.00, 100);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Brush', 'Grooming', 6.00, 200);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Teeth Cleaner', 'Health', 8.50, 90);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Boots', 'Clothing', 12.00, 70);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Fish Filter', 'Aquarium', 35.00, 50);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Hamster Cage', 'Cages', 40.00, 60);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Muzzle', 'Accessories', 9.00, 100);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat Toy', 'Toys', 4.00, 150);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Medicine', 'Health', 20.00, 75);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Bird Cage Stand', 'Cages', 30.00, 30);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Reptile Water Dish', 'Reptile', 10.00, 80);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Pet Poop Bags', 'Accessories', 2.99, 250);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Cat House', 'Furniture', 28.00, 40);
-INSERT INTO product (product_name, category, price, stock ) VALUES ('Dog Training Pads', 'Accessories', 12.00, 100);
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Food', 'Food', 390000, 100, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Toy', 'Toys', 245000, 150, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Cat Collar', 'Accessories', 135000, 80, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Bird Cage', 'Cages', 1225000, 30, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Fish Tank', 'Aquarium', 2950000, 25, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Leash', 'Accessories', 196000, 100, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Cat Litter', 'Litter', 490000, 200, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Bed', 'Furniture', 735000, 60, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Fish Food', 'Food', 305000, 180, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Hamster Wheel', 'Toys', 147000, 200, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Reptile Heat Lamp', 'Reptile', 612000, 50, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Bowl', 'Accessories', 86000, 200, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Carrier', 'Accessories', 1100000, 75, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Bird Food', 'Food', 245000, 150, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Cat Scratching Post', 'Furniture', 553000, 85, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Rabbit Hutch', 'Cages', 1470000, 40, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Sweater', 'Clothing', 367000, 100, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Boots', 'Clothing', 294000, 70, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Fish Filter', 'Aquarium', 857000, 50, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Hamster Cage', 'Cages', 980000, 60, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Muzzle', 'Accessories', 221000, 100, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Cat Toy', 'Toys', 98000, 150, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Bird Cage Stand', 'Cages', 735000, 30, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Reptile Water Dish', 'Reptile', 245000, 80, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Poop Bags', 'Accessories', 74000, 250, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Cat House', 'Furniture', 686000, 40, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Dog Training Pads', 'Accessories', 294000, 100, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Medicine', 'Health', 490000, 75, 'product');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Shampoo', 'Grooming', 220000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Grooming - Full', 'Grooming', 612000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Nail Trimming', 'Beauty', 245000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Fur Trimming', 'Beauty', 368000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Teeth Cleaning', 'Health', 209000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Massage', 'Wellness', 490000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Vaccination Package', 'Health', 857000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Pet Spa', 'Beauty', 980000, 0, 'service');
+INSERT INTO product (product_name, category, price, stock, product_type) VALUES ('Medical Checkup', 'Health', 735000, 0, 'service');
+
 commit;
 
 
@@ -486,11 +524,12 @@ CREATE OR REPLACE PROCEDURE add_product(
     p_category      IN VARCHAR2,
     p_price         IN DECIMAL,
     p_stock         IN INT,
+    p_type          IN VARCHAR2,
     p_message       OUT VARCHAR2
 ) IS
 BEGIN
-    INSERT INTO product (product_name, category, price, stock )
-    VALUES (p_product_name, p_category, p_price, p_stock);
+    INSERT INTO product (product_name, category, price, stock, product_type)
+    VALUES (p_product_name, p_category, p_price, p_stock, p_type);
     
     COMMIT;
     p_message := 'Them san pham thanh cong!';
@@ -501,6 +540,7 @@ EXCEPTION
         p_message := 'Lỗi không xác định: ' || SQLERRM;
 END;
 /
+
 
 
 
@@ -672,6 +712,7 @@ CREATE OR REPLACE PROCEDURE update_product(
     p_category     IN VARCHAR2,
     p_price        IN DECIMAL,
     p_stock        IN INT,
+    p_product_type in varchar2,
     p_message      OUT VARCHAR2
 ) IS
 BEGIN
@@ -679,7 +720,8 @@ BEGIN
     SET product_name = p_product_name,
         category     = p_category,
         price        = p_price,
-        stock        = p_stock
+        stock        = p_stock,
+        product_type = p_product_type
     WHERE product_id = p_product_id;
 
     IF SQL%ROWCOUNT = 0 THEN
@@ -766,15 +808,20 @@ BEGIN
     p_total_amount := v_pet_price + (v_pro_price * NVL(p_quantity, 0));
 
     -- Cập nhật trạng thái thú cưng nếu thay đổi
-    SELECT pet_id INTO v_old_pet_id FROM orders WHERE order_id = p_order_id;
+-- Cập nhật trạng thái thú cưng nếu có sự thay đổi
+SELECT pet_id INTO v_old_pet_id FROM orders WHERE order_id = p_order_id;
 
-    IF p_pet_id IS NOT NULL AND v_old_pet_id IS NOT NULL AND p_pet_id != v_old_pet_id THEN
-        -- Trả lại status cũ cho thú cưng trước đó
+IF p_pet_id IS NOT NULL THEN
+    -- Nếu có pet cũ và khác pet mới thì cập nhật lại trạng thái
+    IF v_old_pet_id IS NOT NULL AND p_pet_id != v_old_pet_id THEN
+        -- Trả lại trạng thái cũ cho pet trước đó
         UPDATE pet SET status = 'Còn thú cưng' WHERE pet_id = v_old_pet_id;
-
-        -- Đánh dấu thú cưng mới là đã bán
-        UPDATE pet SET status = 'Đã bán' WHERE pet_id = p_pet_id;
     END IF;
+
+    -- Cập nhật trạng thái mới cho pet mới
+    UPDATE pet SET status = 'Đã bán' WHERE pet_id = p_pet_id;
+END IF;
+
 
     -- Cập nhật đơn hàng
     UPDATE orders
@@ -947,6 +994,8 @@ BEGIN
         FROM customer
         WHERE LOWER(first_name) LIKE '%' || LOWER(p_keyword) || '%'
            OR LOWER(last_name) LIKE '%' || LOWER(p_keyword) || '%'
+           OR LOWER(phone_number) LIKE '%' || LOWER(p_keyword) || '%'
+           OR LOWER(email) LIKE '%' || LOWER(p_keyword) || '%';
 END;
 /
 CREATE OR REPLACE PROCEDURE search_pet (
@@ -956,12 +1005,15 @@ CREATE OR REPLACE PROCEDURE search_pet (
 AS
 BEGIN
     OPEN p_result FOR
-        SELECT pet_id, pet_name, pet_type, breed, gender, age, price, status
+        SELECT pet_id, pet_name, pet_type, breed, age, gender, price, status, image
         FROM pet
         WHERE LOWER(pet_name) LIKE '%' || LOWER(p_keyword) || '%'
            OR LOWER(pet_type) = LOWER(p_keyword)
+           OR LOWER(breed) LIKE '%' || LOWER(p_keyword) || '%';
 END;
 /
+
+
 
 CREATE OR REPLACE PROCEDURE search_order(
     p_keyword IN VARCHAR2,
@@ -981,6 +1033,110 @@ BEGIN
         ORDER BY order_id ASC;
 END;
 /
+
+CREATE OR REPLACE PROCEDURE add_customerpet (
+    p_customer_id     IN customer_pet.customer_id%TYPE,
+    p_pet_name        IN customer_pet.pet_name%TYPE,
+    p_product_id      IN customer_pet.product_id%TYPE,
+    p_status          IN customer_pet.status%TYPE, -- thêm tham số status
+    p_message         OUT VARCHAR2
+) IS
+BEGIN
+    INSERT INTO customer_pet (
+        customer_pet_id,
+        customer_id,
+        pet_name,
+        product_id,
+        status
+    )
+    VALUES (
+        seq_customer_pet.NEXTVAL,
+        p_customer_id,
+        p_pet_name,
+        p_product_id,
+        p_status
+    );
+
+    p_message := 'Them thong tin dich vu thanh cong!';
+EXCEPTION
+    WHEN OTHERS THEN
+        p_message := 'Lỗi khi thêm: ' || SQLERRM;
+END;
+/
+
+
+
+CREATE OR REPLACE PROCEDURE delete_customerpet (
+    p_customer_pet_id IN customer_pet.customer_pet_id%TYPE,
+    p_message         OUT VARCHAR2
+) IS
+BEGIN
+    DELETE FROM customer_pet
+    WHERE customer_pet_id = p_customer_pet_id;
+
+    IF SQL%ROWCOUNT = 0 THEN
+        p_message := 'Không tìm thấy bản ghi để xóa.';
+    ELSE
+        p_message := 'Xoa thong tin dich vu thanh cong!';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        p_message := 'Lỗi khi xóa: ' || SQLERRM;
+END;
+/
+CREATE OR REPLACE PROCEDURE update_customerpet (
+    p_customer_pet_id IN customer_pet.customer_pet_id%TYPE,
+    p_customer_id     IN customer_pet.customer_id%TYPE,
+    p_pet_name        IN customer_pet.pet_name%TYPE,
+    p_product_id      IN customer_pet.product_id%TYPE,
+    p_status          IN customer_pet.status%TYPE, -- thêm tham số status
+    p_message         OUT VARCHAR2
+) IS
+BEGIN
+    UPDATE customer_pet
+    SET customer_id = p_customer_id,
+        pet_name = p_pet_name,
+        product_id = p_product_id,
+        status = 'Đang thực hiện'
+    WHERE customer_pet_id = p_customer_pet_id;
+
+    IF SQL%ROWCOUNT = 0 THEN
+        p_message := 'Không tìm thấy bản ghi để cập nhật.';
+    ELSE
+        p_message := 'Cap nhat thong tin thanh cong!';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        p_message := 'Lỗi khi cập nhật: ' || SQLERRM;
+END;
+/
+
+
+CREATE OR REPLACE PROCEDURE search_customerpet (
+    p_keyword IN VARCHAR2,
+    p_result  OUT SYS_REFCURSOR
+) IS
+BEGIN
+    OPEN p_result FOR
+    SELECT cp.customer_pet_id,
+           cp.customer_id,
+           c.first_name,
+           c.last_name,
+           cp.pet_name,
+           p.product_id,
+           p.product_name,
+           p.product_type,
+           cp.status
+    FROM customer_pet cp
+    JOIN customer c ON cp.customer_id = c.customer_id
+    JOIN product p ON cp.product_id = p.product_id
+    WHERE LOWER(cp.pet_name) LIKE '%' || LOWER(p_keyword) || '%'
+       OR LOWER(c.first_name) LIKE '%' || LOWER(p_keyword) || '%'
+       OR LOWER(c.last_name) LIKE '%' || LOWER(p_keyword) || '%'
+       OR TO_CHAR(cp.customer_pet_id) = p_keyword
+       OR TO_CHAR(cp.customer_id) = p_keyword
+       OR LOWER(p.product_name) LIKE '%' || LOWER(p_keyword) || '%';
+END;
 
 
 
